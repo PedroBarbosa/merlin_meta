@@ -1,0 +1,37 @@
+<!--
+	Workbench layout system customization
+	This simple code tells the AIBench Workbench how to create its layout. It's like a table, where cells are separated by splitters. 
+	You can edit this file to move or put put more slots with the <components> tag. Then you can put your custom components 
+	(defined in your plugin.xml) in these slots.
+-->
+<table>
+	<row>
+		<cell width="20%">
+			<table>
+				<row>
+					<cell>
+						<components id='left'/>
+					</cell>	
+				</row>
+			</table>
+		</cell>
+		<cell width="80%">
+			<table>
+				<row height="80%">
+					<cell width="80%">
+						<document_viewer />
+					</cell>
+			<!--  		<cell width="25%">
+						<components id='right'/>
+					</cell> -->
+				</row>
+				<!--<row height="25%">
+					<cell>
+						<components id='bottom'/>
+					</cell>
+				</row> -->
+			</table>
+		</cell>
+	</row>
+</table>
+		

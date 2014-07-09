@@ -1,0 +1,7 @@
+*.class
+*~
+.metadata/
+/Releases/
+/RemoteSystemsTempFiles
+/merlin-core/temp/*
+/merlin-core/jre7

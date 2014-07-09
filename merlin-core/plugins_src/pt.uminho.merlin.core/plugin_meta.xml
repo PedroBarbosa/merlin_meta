@@ -1,0 +1,440 @@
+<plugin start="false">
+	<uid>merlin</uid>
+	<name>merlin</name>
+	<version>2.0.1</version>
+	
+	<lifecycleclass>utilities.Lifecycle</lifecycleclass>
+	
+	<extensions>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.NewProject">
+			<operation-description name="Create Project" path="1@Project/" uid= "operations.NewProject.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.NewProject.ID" icon="icons/Lyfecycle/Folder_Documents.png"/>
+        </extension>
+		
+		<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.LoadProject">
+			<operation-description name="Load Project" path="1@Project/" uid= "operations.LoadProject.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.LoadProject.ID" icon="icons/Lyfecycle/Folder_Download.png"/>
+        </extension>
+               
+      
+		<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->	
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.SaveProject">
+			<operation-description name="Save Project" path="1@Project/" uid= "operations.SaveProject.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.SaveProject.ID" icon="icons/Lyfecycle/Folder_Libary.png"/>
+        </extension>
+        
+          <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.SetGenomeFastaFiles">
+			<operation-description name="Set Genome Files" path="1@Project/" uid= "operations.SetGenomeFastaFiles.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.SetGenomeFastaFiles.ID" icon="icons/Lyfecycle/Folder_Download.png"/>
+        </extension>
+		
+		
+		<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.QuitOperation">
+			<operation-description name="Exit" path="1@Project/" uid= "operations.QuitOperation.ID"/>
+		</extension>
+		
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.BLAST_Similarity_Search">
+			<operation-description name="BLAST annotation (Remote)" path="2@Enzymes/" uid= "operations.BLAST_Similarity_Search.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.BLAST_Similarity_Search.ID" icon="icons/Lyfecycle/Folder_Remote.png"/>
+        </extension>
+        
+		<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.LOCAL_BLAST_Similarity_Search">
+			<operation-description name="BLAST annotation (Local)" path="2@Enzymes/" uid= "operations.LOCAL_BLAST_Similarity_Search.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.LOCAL_BLAST_Similarity_Search.ID" icon="icons/Lyfecycle/FolderBlue.png"/>
+        </extension>
+        
+		<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		  
+		  
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.HMMER_Similarity_Search">
+			<operation-description name="HMMER annotation" path="2@Enzymes/" uid= "operations.HMMER_Similarity_Search.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.HMMER_Similarity_Search.ID" icon="icons/Lyfecycle/Folder_Remote.png"/>
+        </extension>
+		
+		  <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		  
+		  <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.Transporters_Similarity_Search">
+			<operation-description name="Transport Proteins Identification" path="3@Transporters/" uid= "operations.Transporters_Similarity_Search.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.Transporters_Similarity_Search.ID" icon="icons/Lyfecycle/Folder_Remote.png"/>
+        </extension>
+		
+		 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		  
+		  <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.TransportersAnnotation">
+			<operation-description name="Transport Reactions Generation" path="3@Transporters/" uid= "operations.TransportersAnnotation.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.TransportersAnnotation.ID" icon="icons/Lyfecycle/Folder_Remote.png"/>
+        </extension>
+		
+		  <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		  
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.NewTransportersLoading">
+			<operation-description name="New Transporters Loading" path="3@Transporters/" uid= "operations.NewTransportersLoading.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.NewTransportersLoading.ID" icon="icons/Lyfecycle/Folder_Download.png"/>
+        </extension>
+                
+		 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		  
+				<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.IntegrateTransporterstoDatabase">
+			<operation-description name="Transporters Integration" path="3@Transporters/" uid= "operations.IntegrateTransporterstoDatabase.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.IntegrateTransporterstoDatabase.ID" icon="icons/Lyfecycle/FolderBlue.png"/>
+        </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.CompartmentsPrediction">
+			<operation-description name="Perform compartments prediction" path="4@Compartments/" uid= "operations.CompartmentsPrediction.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.CompartmentsPrediction.ID" icon="icons/Lyfecycle/Folder_Remote.png"/>
+        </extension>
+		
+		 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		  
+		    <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.LoadPSort3Results">
+			<operation-description name="Load PSORTb v3.0 Results" path="4@Compartments/" uid= "operations.LoadPSort3Results.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.LoadPSort3Results.ID" icon="icons/Lyfecycle/Folder_Download.png"/>
+        </extension>
+		
+		<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.IntegrateCompartmentstoDatabase">
+			<operation-description name="Compartments Integration" path="4@Compartments/" uid= "operations.IntegrateCompartmentstoDatabase.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.IntegrateCompartmentstoDatabase.ID" icon="icons/Lyfecycle/FolderBlue.png"/>
+        </extension>
+        
+		 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+		 
+		 <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.SetProxy">
+			<operation-description name="Set Proxy" path="5@Operations/" uid= "operations.SetProxy.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.SetProxy.ID" icon="icons/Lyfecycle/Folder_Web.png"/>
+        </extension>
+		        
+         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.Database_loader">
+			<operation-description name="Load KEGG Data" path="5@Database/" uid= "operations.Database_loader.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.Database_loader.ID" icon="icons/Lyfecycle/Folder_Remote.png"/>
+        </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+        
+        <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.NewDatabase">
+			<operation-description name="New Database" path="5@Database/" uid= "operations.NewDatabase.ID"/>
+		</extension>
+		
+			<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.NewDatabase.ID" icon="icons/Lyfecycle/Folder_Burn.png"/>
+        </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+        
+             <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.Create_DatabaseFromBackup">
+			<operation-description name="New Database from backup file" path="5@Database/" uid= "operations.Create_DatabaseFromBackup.ID"/>
+		</extension>
+		
+			<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.Create_DatabaseFromBackup.ID" icon="icons/Lyfecycle/Folder_Burn.png"/>
+        </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+        
+        <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.Merge_databases">
+			<operation-description name="Merge Databases" path="5@Database/" uid= "operations.Merge_databases.ID"/>
+		</extension>
+		
+			<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.Merge_databases.ID" icon="icons/Lyfecycle/Folder_Burn.png"/>
+        </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+        
+        <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.Create_Database_Backup">
+			<operation-description name="Save Database Backup" path="5@Database/" uid= "operations.Create_Database_Backup.ID"/>
+		</extension>
+		
+			<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.Create_Database_Backup.ID" icon="icons/Lyfecycle/Folder_Application.png"/>
+        </extension>
+       
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.Remove_database">
+			<operation-description name="Clean Database" path="5@Database/" uid= "operations.Remove_database.ID"/>
+		</extension>
+		
+			<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.Remove_database.ID" icon="icons/Lyfecycle/Folder_Burn.png"/>
+        </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->  
+        
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.DropDatabase">
+			<operation-description name="Drop Database" path="5@Database/" uid= "operations.DropDatabase.ID"/>
+		</extension>
+		
+			<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.DropDatabase.ID" icon="icons/Lyfecycle/Folder_Burn.png"/>
+        </extension>
+		
+		  <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		  
+		 <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.CorrectReversibility">
+			<operation-description name="Correct reactions reversibility" path="6@Model/" uid= "operations.CorrectReversibility.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.CorrectReversibility.ID" icon="icons/Lyfecycle/Folder_Public.png"/>
+        </extension>
+        
+         <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.RemoveUnconnectedReactions">
+			<operation-description name="Remove unconnected reactions from model" path="6@Model/" uid= "operations.RemoveUnconnectedReactions.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.RemoveUnconnectedReactions.ID" icon="icons/Lyfecycle/Folder_Public.png"/>
+        </extension>
+        
+         <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		 
+		 <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.ExportToSBML">
+			<operation-description name="Export to SBML" path="6@Model/" uid= "operations.ExportToSBML.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.ExportToSBML.ID" icon="icons/Lyfecycle/Folder_Application.png"/>
+        </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+				
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.NewQuery">
+			<operation-description name="New Query" path="7@Database/" uid= "operations.NewQuery.ID"/>
+		</extension>
+		
+			<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.NewQuery.ID" icon="icons/Lyfecycle/Folder_Burn.png"/>
+        </extension>
+		
+		 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+		 
+		 <extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.IntegrateHomologyToDatabase">
+			<operation-description name="Metabolic (Re)-Annotation Data Integration" path="1@Integration/" uid= "operations.IntegrateHomologyToDatabase.ID"/>
+		</extension>
+		
+			
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.IntegrateHomologyToDatabase.ID" icon="icons/Lyfecycle/FolderBlue.png"/>
+        </extension>
+        
+         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+	
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+		<icon-operation operation="operations.QuitOperation.ID" icon="icons/Lyfecycle/FolderBlue.png"/>
+        </extension>		
+				
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+
+			<!-- %%%%%  Project Views %%%%%	-->		
+			<view name="Project view" datatype="datatypes.Project" class="views.ProjectView"/>
+			
+			<view name="Database view" datatype="datatypes.Database" class="views.DatabaseView"/>
+				
+			<view name="Datatable view" datatype="datatypes.DataTable" class="views.DataTableView"/>
+
+			<view name="Table view" datatype="datatypes.Table" class="views.TableView"/>
+
+			<view name="Tables view" datatype="datatypes.Tables" class="views.TablesView"/>
+			
+			<!--view name="Results view" datatype="datatypes.Results" class="views.QueriesView"/-->
+			
+			<view name="Entities view" datatype="datatypes.Entities" class="views.EntitiesView"/>
+			
+			
+			<!-- %%%%%  Metabolic/Regulatory Views %%%%%	-->
+			<view name="Gene view" datatype="datatypes.metabolic_regulatory.Genes" class="views.metabolic_regulatory.GeneView"/>
+			
+			<view name="Protein view" datatype="datatypes.metabolic_regulatory.Proteins" class="views.metabolic_regulatory.ProteinView"/>
+			
+			<view name="Homology view" datatype="datatypes.metabolic_regulatory.HomologyDataContainer" class="views.metabolic_regulatory.HomologyDataViewer"/>
+			
+			<!-- %%%%%  Metagenomic Views %%%%%	-->
+			
+			<view name="Metagenomics taxonomy view" datatype="datatypes.metagenomic.TaxonomyMetaContainer" class="views.metagenomic.TaxonomyMetaView"/>
+			
+			<view name="Metagenomics enzymes view" datatype="datatypes.metagenomic.EnzymesMetaContainer" class="views.metagenomic.EnzymesMetaView"/>
+			
+			<view name="Metagenomics pathways view" datatype="datatypes.metagenomic.PathwaysMetaContainer" class="views.metagenomic.PathwaysMetaView"/>
+						
+			<!-- %%%%%  Metabolic Views %%%%%	-->
+			<view name="Reagent/Products view" datatype="datatypes.metabolic.ReagentProducts" class="views.metabolic.ReagentProductsView"/>	
+			
+			<view name="Reactions view" datatype="datatypes.metabolic.ReactionsContainer" class="views.metabolic.ReactionsView"/>
+			
+			<view name="Enzyme view" datatype="datatypes.metabolic.EnzymesContainer" class="views.metabolic.EnzymeView"/>
+						
+			<view name="Compounds view" datatype="datatypes.metabolic.Compounds" class="views.GenericEntityDataView"/>
+			
+			<view name="Compounds/Reactions view" datatype="datatypes.metabolic.CompoundsReactions" class="views.GenericEntityDataView"/>
+			
+			<view name="Pathways view" datatype="datatypes.metabolic.Pathway" class="views.GenericEntityDataView"/>
+			
+			
+			<!-- %%%%%  Regulatory Views %%%%%	
+			<view name="TranscriptionFactor view" datatype="datatypes.regulatory.TranscriptionFactor" class="views.regulatory.TranscriptionFactorView"/>						
+			
+			<view name="Transcription Unit view" datatype="datatypes.regulatory.TranscriptionUnit" class="views.regulatory.TranscriptionUnitView"/>
+			
+			<view name="Promoters view" datatype="datatypes.regulatory.Promoter" class="views.regulatory.PromoterView"/>
+			
+			<view name="Sigma view" datatype="datatypes.regulatory.Sigma" class="views.regulatory.SigmaView"/>-->
+			
+			
+			<!-- %%%%%  Generic Views %%%%%		
+			<view name="Generic Entity view" datatype="datatypes.Entity" class="views.GenericEntityDataView"/>-->	
+			
+			
+			<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  STATS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
+		
+			<!-- %%%%%  Metabolic/Regulatory Views %%%%%	-->
+			<view name="Entity view" datatype="datatypes.metabolic_regulatory.Genes" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metabolic_regulatory.Proteins" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metabolic_regulatory.HomologyDataContainer" class="views.metabolic_regulatory.EntityView"/>
+			
+			<!-- %%%%%  Metagenomic Views %%%%%	-->
+			
+			<view name="Entity view" datatype="datatypes.metagenomic.TaxonomyMetaContainer" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metagenomic.EnzymesMetaContainer" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metagenomic.PathwaysMetaContainer" class="views.metabolic_regulatory.EntityView"/>
+			
+		
+			<!-- %%%%%  Metabolic Views %%%%%	-->
+			<view name="Entity view" datatype="datatypes.metabolic.ReactionsContainer" class="views.metabolic_regulatory.EntityView"/>
+				
+			<view name="Entity view" datatype="datatypes.metabolic.ReagentProducts" class="views.metabolic_regulatory.EntityView"/>
+		
+			<!--<view name="Entity view" datatype="datatypes.metabolic.EnzimeInhibiter" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metabolic.EnzimeRegulator" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metabolic.EnzimeActivator" class="views.metabolic_regulatory.EntityView"/>-->
+			
+			<view name="Entity view" datatype="datatypes.metabolic.EnzymesContainer" class="views.metabolic_regulatory.EntityView"/>
+					
+			<view name="Entity view" datatype="datatypes.metabolic.Compounds" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metabolic.Pathway" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.metabolic.CompoundsReactions" class="views.metabolic_regulatory.EntityView"/>
+			
+	
+			<!-- %%%%%  Regulatory Views %%%%%	-->		
+			<view name="Entity view" datatype="datatypes.regulatory.TranscriptionFactor" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.regulatory.Sigma" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.regulatory.TranscriptionUnit" class="views.metabolic_regulatory.EntityView"/>
+			
+			<view name="Entity view" datatype="datatypes.regulatory.Promoter" class="views.metabolic_regulatory.EntityView"/>	
+			
+			
+			<!-- %%%%%  Generic Views %%%%%
+			<view name="Entity view" datatype="datatypes.Entity" class="views.metabolic_regulatory.EntityView"/>-->
+			
+			
+			<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GUI %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+			
+			<!-- <gui-operation operation="operations.NewQuery.ID" class="gui.NewSQLQueryDialog"/> -->
+			
+			<gui-operation operation="operations.NewProject.ID" class="gui.NewProjectGui"/>
+			
+			<gui-operation operation="operations.Merge_Databases.ID" class="gui.Merge_DatabasesGui"/>
+			
+			<gui-operation operation="operations.Database_loader.ID" class="gui.Database_loader_gui"/>
+			
+			<!--gui-operation operation="operations.SetProxy.ID" class="gui.SetProxyGui"/>-->
+			
+			<gui-operation operation="operations.Remove_database.ID" class="gui.Remove_database_gui"/>
+			
+			<gui-operation operation="operations.QuitOperation.ID" class="gui.QuitGUI"/>
+		
+		</extension>
+				
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-datatype datatype="datatypes.Project" icon="icons/Lyfecycle/Document_Folder_black.png"/>
+			<icon-datatype datatype="datatypes.Database" icon="icons/Lyfecycle/hard_disk.png"/>
+			<icon-datatype datatype="datatypes.Entities" icon="icons/Lyfecycle/Document_Folder_green.png"/>
+			<icon-datatype datatype="datatypes.metabolic_regulatory.Entity" icon="icons/Lyfecycle/presentation.png"/>
+			<!--icon-datatype datatype="datatypes.Results" icon="icons/Lyfecycle/Document_Folder_white.png"/-->
+			<icon-datatype datatype="datatypes.Tables" icon="icons/Lyfecycle/Document_Folder_white.png"/>
+			<icon-datatype datatype="datatypes.Table" icon="icons/Lyfecycle/Document_Folder_blue.png"/>
+			
+		</extension>		
+		
+	</extensions>
+
+</plugin>
+					

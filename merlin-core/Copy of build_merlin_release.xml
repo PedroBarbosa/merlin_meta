@@ -1,0 +1,1353 @@
+<?xml version="1.0"?>
+
+<project default ="usage" >
+
+	<target name="init">
+		<tstamp>
+			<format property="YEAR" pattern="yyyy"/>
+		</tstamp>
+
+		<property name="Name" value="merlin"/>
+		<property name="name" value="merlin"/>
+
+		<property name="year" value="${YEAR}"/>
+
+		<echo message="----------- ${Name} ${version} [${year}] ------------"/>
+		<echo message="-----------     ${TODAY}   ------------"/>
+		<echo message="-----------     ${DSTAMP} ${TSTAMP}  ------------"/>
+
+		<property environment="env"/>
+		<property name="build.compiler" value="modern"/>
+		<property name="build.sysclasspath" value="ignore"/>
+		<property name="debug" value="on"/>
+		<property name="optimize" value="off"/>
+		<property name="deprecation" value="false"/>
+		<property name="depend" value="true"/>
+		<property name="verbose" value="false"/>
+		<property name="build.number" value="${DSTAMP}-${TSTAMP}"/>
+		<property name="build.name" value="${version} (build ${build.number})"/>
+		<property name="base_dir" value="${workspace}/Releases/${name}_${version}_${platform}(${build.number})"/>
+		<echo message="base_dir: ${base_dir}"/> 
+
+		<!--SRC merlin-->
+
+		<property name="ws.bioComponents" value="${workspace}/BioComponents"/>
+		<property name="ws.utilities" value="${workspace}/Utilities"/>
+		<property name="ws.bioAPIs" value="${workspace}/BioAPIs"/>
+		<property name="ws.merlin_utilities" value="${workspace}/merlin_utilities"/>
+		<property name="ws.mySQLConnector" value="${workspace}/MySQLConnector"/>
+		<property name="ws.sw_cluster" value="${workspace}/sw_cluster"/>
+		<property name="ws.gpr_rules" value="${workspace}/GPR_Rules"/>
+		<property name="ws.transport_systems" value="${workspace}/transport_systems"/>
+		<property name="ws.merlin" value="${workspace}/merlin"/>
+		<property name="plugins.bin" value="${base_dir}/plugins_bin"/>
+		
+		<property name="test.src.dir" value="${base_dir}/test"/>
+		<property name="build.dir" value="${base_dir}/build"/>
+		<property name="build.src" value="${base_dir}/build/src"/>
+		<property name="build.dest" value="${base_dir}/build/classes"/>
+		<property name="jars.dir" value="${base_dir}/lib"/>
+		<property name="dist.root" value="${base_dir}/dist"/>
+		<property name="dist.dir" value="${dist.root}/${name}-${version}"/>
+		<property name="resource.dir" value="${base_dir}/resources"/>
+		<property name="compiled.jars" value="${base_dir}/newlib"/>
+		<property name="build-app" value="buid-app-${platform}" />
+		
+
+		<filter token="year" value="${year}"/>
+		<filter token="version" value="${version}"/>
+		<filter token="date" value="${TODAY}"/>
+		<filter token="log" value="true"/>
+		<filter token="verbose" value="true"/>
+
+		<echo message="merlin: ${ws.merlin}"/> 
+		<echo message="Utilities: ${ws.utilities}"/> 
+		<echo message="BioAPIs: ${ws.bioAPIs}"/> 
+		<echo message="merlin_utilities{ws.merlin_utilities}"/> 
+		<echo message="Transport_systems: ${ws.transport_systems}"/> 
+		<echo message="SW_cluster: ${ws.sw_cluster}"/> 
+		<echo message="GPR_Rules: ${ws.gpr_rules}"/> 
+		<echo message="BioComponents: ${ws.bioComponents}"/> 
+		<echo message="MySQLConnector: ${ws.mySQLConnector}"/> 
+		<echo message="Workspace: ${workspace}"/>
+		<echo message=""/>
+		<echo message="Version: ${version}"/>
+		<echo message="Platform: ${platform}"/>
+
+	</target>
+
+	<target name="usage" depends="init">
+		
+		<echo message=""/>
+		<echo message=""/>
+		<echo message=" ${Name} Build file"/>
+		<echo message=" -------------------------------------------------------------"/>
+		<echo message=""/>
+		<echo message=" available targets are:"/>
+		<echo message=""/>
+		<echo message="   build-merlinBasePlugins -Dversion=[version] -Dworkspace=[worspace]  -Dplatform[unix|win|darwin]"/>
+		<echo message=""/>
+		<!--
+		<echo message=" to run the next targets you have to run build-merlinBasePlugins before"/>
+		<echo message="   build-optKnock -Dversion=[version] -Dcplexjar=[path for cplex.jar]"/>
+		<echo message="   build-overunder4merlin -Dversion=[version] -Dcplexjar=[path for cplex.jar]"/>
+		<echo message="   build-regulatorytool4merlin -Dversion=[version] -Dcplexjar=[path for cplex.jar]"/>
+		<echo message="   build-efm4merlin -Dversion=[version] -Dcplexjar=[path for cplex.jar]"/>
+		<echo message="   build-addreactions -Dversion=[version] -Dcplexjar=[path for cplex.jar]"/>
+		-->
+		<echo message=""/>
+		<echo message="   buid-app"/>
+		<echo message="   clear"/>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Prepares the build directory                                        -->
+	<!-- =================================================================== -->
+	<target name="-prepare" depends="init">
+
+		<mkdir dir="${base_dir}"/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.src}"/>
+		<mkdir dir="${build.dest}"/>
+		<mkdir dir="${jars.dir}"/>
+	</target>
+
+	<target name="clear" description="Delete the temporary folder created during compilation">
+		<delete dir="${build.dir}"/> 
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Prepares the source code                                            -->
+	<!-- =================================================================== -->
+	<target name="-build-utilities" depends="-prepare">
+		
+		<property name="build.dest.utilities" value="${build.dest}/utilities"/>
+				
+		<mkdir dir="${build.dest.utilities}"/>
+		<mkdir dir="${build.dest.utilities}/META-INF"/>
+
+		
+		<property name="src.utilities" value="${ws.utilities}/src"/>
+		<property name="lib.utilities" value="${ws.utilities}/lib"/>
+
+		<echo message="Copy and compile code: ${src.utilities}"/>
+		<echo message="Copy lib: ${lib.utilities}"/>
+		<echo message="dest: ${workspace}"/>
+
+		<!-- copy src files -->
+		<copy todir="${build.src}" overwrite="yes">
+			<fileset 
+			    dir="${src.utilities}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+			</fileset>
+		</copy>
+
+		<!--
+		<copy todir="${jars.dir}" overwrite="yes">
+			<fileset 
+			    dir="${lib.utilities}"
+			    includes="*.jar *.zip">
+			</fileset>
+		</copy>
+		-->
+
+		<path id="classpath">
+			<fileset dir="${jars.dir}" includes="*.jar *.zip">
+			</fileset>
+		</path>
+
+		<javac srcdir="${build.src}/utilities"
+           		destdir="${build.dest.utilities}"
+			debug="${debug}"
+			optimize="${optimize}"
+			verbose="${verbose}"
+			source="1.7"
+			target="1.7"
+			classpathref="classpath">
+		</javac>
+
+
+		<manifest file="${build.dest.utilities}/META-INF/MANIFEST.MF">
+			<section name="Utilities}">
+				<attribute name="Specification-Title" value="Utilities"/>
+				<attribute name="Specification-Version" value="${api.version}"/>
+				<attribute name="Implementation-Title" value="Utilities"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+			</section>
+		</manifest>
+
+		<copy todir="${build.dest}">
+			<fileset dir="${build.src}" 
+				includes="**/*.png **/*.gif **/*.xsd **/*.tmpl **/data/* **/*.xml **/*.cfg **/*.obo **/*.properties">
+			</fileset>
+		</copy>
+		<jar jarfile="${jars.dir}/utilities_${version}.jar" basedir="${build.dest.utilities}" manifest="${build.dest.utilities}/META-INF/MANIFEST.MF"/>
+	</target>
+
+	<target name="-build-merlin_utilities">
+		
+		<property name="build.dest.merlin_utilities" value="${build.dest}/merlin_utilities"/>
+				
+		<mkdir dir="${build.dest.merlin_utilities}"/>
+		<mkdir dir="${build.dest.merlin_utilities}/META-INF"/>
+		
+		<property name="src.merlin_utilities" value="${ws.merlin_utilities}/src"/>
+		<property name="lib.merlin_utilities" value="${ws.merlin_utilities}/lib"/>
+
+		<!-- copy src files -->
+		<copy todir="${build.src}/merlin_utilities" overwrite="yes">
+			<fileset 
+			    dir="${src.merlin_utilities}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+			</fileset>
+		</copy>
+		
+		<!--
+		<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false" includeEmptyDirs="false">
+			<fileset 
+			    dir="${lib.merlin_utilities}"
+			    includes="*/** *.jar *.zip">
+			</fileset>
+		</copy>
+
+		<path id="classpath">
+			<fileset dir="${jars.dir}" includes="*.jar *.zip">
+			</fileset>
+		</path>
+ 		-->
+		
+		<javac srcdir="${build.src}/merlin_utilities"
+           		destdir="${build.dest.merlin_utilities}"
+			debug="${debug}"
+			optimize="${optimize}"
+			verbose="${verbose}"
+			source="1.7"
+			target="1.7"
+			classpathref="classpath">
+		</javac>
+
+
+		<manifest file="${build.dest.merlin_utilities}/META-INF/MANIFEST.MF">
+			<section name="Utilities}">
+				<attribute name="Specification-Title" value="Utilities"/>
+				<attribute name="Specification-Version" value="${api.version}"/>
+				<attribute name="Implementation-Title" value="Utilities"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+			</section>
+		</manifest>
+
+		<copy todir="${build.dest}">
+			<fileset dir="${build.src}" 
+				includes="**/*.png **/*.gif **/*.xsd **/*.tmpl **/data/* **/*.xml **/*.cfg **/*.obo **/*.properties">
+			</fileset>
+		</copy>
+		<jar jarfile="${jars.dir}/merlin_utilities_${version}.jar" basedir="${build.dest.merlin_utilities}" manifest="${build.dest.merlin_utilities}/META-INF/MANIFEST.MF"/>
+	</target>
+	
+	<target name="-build-mySQLConnector">
+			
+			<property name="build.dest.mySQLConnector" value="${build.dest}/mySQLConnector"/>
+					
+			<mkdir dir="${build.dest.mySQLConnector}"/>
+			<mkdir dir="${build.dest.mySQLConnector}/META-INF"/>
+			
+			<property name="src.mySQLConnector" value="${ws.mySQLConnector}/src"/>
+			<property name="lib.mySQLConnector" value="${ws.mySQLConnector}/lib"/>
+
+			<!-- copy src files -->
+			<copy todir="${build.src}/mySQLConnector" overwrite="yes">
+				<fileset 
+				    dir="${src.mySQLConnector}"
+				    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+				</fileset>
+			</copy>
+			
+			<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false">
+				<fileset 
+				    dir="${lib.mySQLConnector}/"
+				    includes="*/** *.jar *.zip">
+				</fileset>
+			</copy>
+
+			<path id="classpath">
+				<fileset dir="${jars.dir}" includes="*.jar *.zip">
+				</fileset>
+			</path>
+	 		
+			
+			<javac srcdir="${build.src}/mySQLConnector"
+	           		destdir="${build.dest.mySQLConnector}"
+				debug="${debug}"
+				optimize="${optimize}"
+				verbose="${verbose}"
+				source="1.7"
+				target="1.7"
+				classpathref="classpath">
+			</javac>
+
+
+			<manifest file="${build.dest.mySQLConnector}/META-INF/MANIFEST.MF">
+				<section name="Utilities}">
+					<attribute name="Specification-Title" value="Utilities"/>
+					<attribute name="Specification-Version" value="${api.version}"/>
+					<attribute name="Implementation-Title" value="Utilities"/>
+					<attribute name="Implementation-Version" value="${version}"/>
+				</section>
+			</manifest>
+
+			<copy todir="${build.dest}">
+				<fileset dir="${build.src}" 
+					includes="**/*.png **/*.gif **/*.xsd **/*.tmpl **/data/* **/*.xml **/*.cfg **/*.obo **/*.properties">
+				</fileset>
+			</copy>
+			<jar jarfile="${jars.dir}/mySQLConnector_${version}.jar" basedir="${build.dest.mySQLConnector}" manifest="${build.dest.mySQLConnector}/META-INF/MANIFEST.MF"/>
+		</target>
+
+	<target name="-build-bioAPIs" depends="-build-merlin_utilities">
+		
+		<property name="build.dest.bioAPIs" value="${build.dest}/bioAPIs"/>
+				
+		<mkdir dir="${build.dest.bioAPIs}"/>
+		<mkdir dir="${build.dest.bioAPIs}/META-INF"/>
+
+		<property name="src.bioAPIs" value="${ws.bioAPIs}/src"/>
+		<property name="lib.bioAPIs" value="${ws.bioAPIs}/lib"/>
+
+		<echo message="Copy and compile code: ${src.bioAPIs}"/>
+		<echo message="Copy lib: ${lib.bioAPIs}"/>
+
+		<!-- copy src files -->
+		<copy todir="${build.src}/bioAPIs" overwrite="yes">
+			<fileset 
+			    dir="${src.bioAPIs}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+			</fileset>
+		</copy>
+
+		<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false">
+	 		<fileset 
+			    dir="${lib.bioAPIs}"
+			    includes="*/** *.jar *.zip">
+			</fileset>
+		</copy>
+
+
+		<path id="classpath">
+			<fileset dir="${jars.dir}" includes="*.jar *.zip">
+			</fileset>
+		</path>
+
+		<javac srcdir="${build.src}/bioAPIs"
+           		destdir="${build.dest.bioAPIs}"
+			debug="${debug}"
+			optimize="${optimize}"
+			verbose="${verbose}"
+			source="1.7"
+			target="1.7"
+			classpathref="classpath">
+		</javac>
+
+
+		<manifest file="${build.dest.bioAPIs}/META-INF/MANIFEST.MF">
+			<section name="BioAPIs}">
+				<attribute name="Specification-Title" value="Utilities"/>
+				<attribute name="Specification-Version" value="${api.version}"/>
+				<attribute name="Implementation-Title" value="Utilities"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+			</section>
+		</manifest>
+
+		<copy todir="${build.dest}">
+			<fileset dir="${build.src}" 
+				includes="**/*.png **/*.gif **/*.xsd **/*.tmpl **/data/* **/*.xml **/*.cfg **/*.obo **/*.properties">
+			</fileset>
+		</copy>
+		<jar jarfile="${jars.dir}/bioAPIs_${version}.jar" basedir="${build.dest.bioAPIs}" manifest="${build.dest.bioAPIs}/META-INF/MANIFEST.MF"/>
+
+
+	</target>
+
+	<target name="-build-gpr_rules" depends="-build-mySQLConnector,-build-bioAPIs, -build-sw_cluster,-build-merlin_utilities" description = "Build GPRs">
+					
+					<property name="build.dest.gpr_rules" value="${build.dest}/gpr_rules"/>
+							
+					<mkdir dir="${build.dest.gpr_rules}"/>
+					<mkdir dir="${build.dest.gpr_rules}/META-INF"/>
+
+					<property name="src.gpr_rules" value="${ws.gpr_rules}/src"/>
+					<property name="lib.gpr_rules" value="${ws.gpr_rules}/lib"/>
+
+					<echo message="Copy and compile code: ${src.gpr_rules}"/>
+					<echo message="Copy lib: ${lib.gpr_rules}"/>
+
+					<!-- copy src files -->
+					<copy todir="${build.src}/gpr_rules" overwrite="yes">
+						<fileset 
+						    dir="${src.gpr_rules}"
+						    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+						</fileset>
+					</copy>
+			
+					<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false">
+			 		<fileset 
+					    dir="${lib.gpr_rules}"
+					    includes="*/** *.jar *.zip">
+					</fileset>
+					</copy>
+				
+					<path id="classpath">
+						<fileset dir="${jars.dir}" includes="*.jar *.zip">
+						</fileset>
+					</path>
+
+					<javac srcdir="${build.src}/gpr_rules"
+			           		destdir="${build.dest.gpr_rules}"
+						debug="${debug}"
+						optimize="${optimize}"
+						verbose="${verbose}"
+						source="1.7"
+						target="1.7"
+						classpathref="classpath">
+					</javac>
+
+
+					<manifest file="${build.dest.gpr_rules}/META-INF/MANIFEST.MF">
+						<section name="GPR_Rules}">
+							<attribute name="Specification-Title" value="Utilities"/>
+							<attribute name="Specification-Version" value="${api.version}"/>
+							<attribute name="Implementation-Title" value="Utilities"/>
+							<attribute name="Implementation-Version" value="${version}"/>
+						</section>
+					</manifest>
+
+					<copy todir="${build.dest}">
+						<fileset dir="${build.src}" 
+							includes="**/*.png **/*.gif **/*.xsd **/*.tmpl **/data/* **/*.xml **/*.cfg **/*.obo **/*.properties">
+						</fileset>
+					</copy>
+					<jar jarfile="${jars.dir}/gpr_rules_${version}.jar" basedir="${build.dest.gpr_rules}" manifest="${build.dest.gpr_rules}/META-INF/MANIFEST.MF"/>
+
+				</target>
+	
+	<target name="-build-sw_cluster" depends="-build-bioAPIs,-build-mySQLConnector">
+			
+			<property name="build.dest.sw_cluster" value="${build.dest}/sw_cluster"/>
+					
+			<mkdir dir="${build.dest.sw_cluster}"/>
+			<mkdir dir="${build.dest.sw_cluster}/META-INF"/>
+
+			<property name="src.sw_cluster" value="${ws.sw_cluster}/src"/>
+			<property name="lib.sw_cluster" value="${ws.sw_cluster}/lib"/>
+
+			<echo message="Copy and compile code: ${src.sw_cluster}"/>
+			<echo message="Copy lib: ${lib.sw_cluster}"/>
+
+			<!-- copy src files -->
+			<copy todir="${build.src}/sw_cluster" overwrite="yes">
+				<fileset 
+				    dir="${src.sw_cluster}"
+				    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+				</fileset>
+			</copy>
+
+		<!--
+		<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false">
+				<fileset 
+				    dir="${lib.sw_cluster}"
+				    includes="*/** *.jar *.zip">
+				</fileset>
+			</copy>
+		-->
+
+			<path id="classpath">
+				<fileset dir="${jars.dir}" includes="*.jar *.zip">
+				</fileset>
+			</path>
+
+			<javac srcdir="${build.src}/sw_cluster"
+	           		destdir="${build.dest.sw_cluster}"
+				debug="${debug}"
+				optimize="${optimize}"
+				verbose="${verbose}"
+				source="1.7"
+				target="1.7"
+				classpathref="classpath">
+			</javac>
+
+
+			<manifest file="${build.dest.sw_cluster}/META-INF/MANIFEST.MF">
+				<section name="SW_cluster}">
+					<attribute name="Specification-Title" value="Utilities"/>
+					<attribute name="Specification-Version" value="${api.version}"/>
+					<attribute name="Implementation-Title" value="Utilities"/>
+					<attribute name="Implementation-Version" value="${version}"/>
+				</section>
+			</manifest>
+
+			<copy todir="${build.dest}">
+				<fileset dir="${build.src}" 
+					includes="**/*.png **/*.gif **/*.xsd **/*.tmpl **/data/* **/*.xml **/*.cfg **/*.obo **/*.properties">
+				</fileset>
+			</copy>
+			<jar jarfile="${jars.dir}/sw_cluster_${version}.jar" basedir="${build.dest.sw_cluster}" manifest="${build.dest.sw_cluster}/META-INF/MANIFEST.MF"/>
+
+
+		</target>
+	
+	<target name="-build-bioComponents" depends="-build-utilities,-build-bioAPIs">
+
+		<property name="build.dest.bioComponents" value="${build.dest}/bioComponents"/>
+				
+		<mkdir dir="${build.dest.bioComponents}"/>
+		<mkdir dir="${build.dest.bioComponents}/META-INF"/>
+
+		<property name="src.bioComponents" value="${ws.bioComponents}/src"/>
+		<property name="lib.bioComponents" value="${ws.bioComponents}/lib"/>
+
+		<echo message="Copy and compile code: ${src.bioComponents}"/>
+		<echo message="Copy lib: ${lib.bioComponents}"/>
+
+		<!-- copy src files -->
+		<copy todir="${build.src}/bioComponents" overwrite="yes">
+			<fileset 
+			    dir="${src.bioComponents}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip, **/layoutContainer/interfaces/*, **/layoutContainer\io/*,
+				**/layoutContainer\io\readers/*,**/layoutContainer\io\writers/*,**/layoutContainer/components/*, **/layoutContainer/*">
+			</fileset>
+		</copy>
+
+		<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false">
+						<fileset 
+						    dir="${lib.bioComponents}"
+						    includes="*/** *.jar *.zip">
+						</fileset>
+					</copy>
+
+
+					<path id="classpath">
+						<fileset dir="${jars.dir}" includes="*.jar *.zip">
+						</fileset>
+					</path>
+
+		<javac srcdir="${build.src}/bioComponents"
+		           		destdir="${build.dest.bioComponents}"
+					debug="${debug}"
+					optimize="${optimize}"
+					verbose="${verbose}"
+					source="1.7"
+					target="1.7"
+					classpathref="classpath">
+				</javac>
+
+		<manifest file="${build.dest.bioComponents}/META-INF/MANIFEST.MF">
+			<section name="BioComponents}">
+				<attribute name="Specification-Title" value="Utilities"/>
+				<attribute name="Specification-Version" value="${api.version}"/>
+				<attribute name="Implementation-Title" value="Utilities"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+			</section>
+		</manifest>
+
+		
+		<jar jarfile="${jars.dir}/bioComponents_${version}.jar" basedir="${build.dest.bioComponents}" manifest="${build.dest.bioComponents}/META-INF/MANIFEST.MF"/>
+	</target>
+
+	<!--
+	<target name="-build-metabolic-unix">
+		<property name="lib.metabolic.platf.det" value="${ws.metabolic}/libunix64"/>
+		<property name="lib.metabolic.platf" value="${base_dir}/libunix64"/>
+		<antcall target="-build-metabolic-end">
+		</antcall>
+	</target>
+
+	<target name="-build-metabolic-win" >
+		<property name="lib.metabolic.platf.det" value="${ws.metabolic}/libwin32"/>
+		<property name="lib.metabolic.platf" value="${base_dir}/libwin32"/>
+		<antcall target="-build-metabolic-end">
+		</antcall>
+	</target>
+
+	<target name="-build-metabolic-darwin" >
+		<property name="lib.metabolic.platf.det" value="${ws.metabolic}/libdarwin64"/>
+		<property name="lib.metabolic.platf" value="${base_dir}/libdarwin64"/>
+		<antcall target="-build-metabolic-end">
+		</antcall>
+	</target>
+	-->
+
+	<target name="-build-transport_systems" depends="-build-utilities,-build-mySQLConnector,-build-bioAPIs,-build-bioComponents,-build-sw_cluster,-build-merlin_utilities">
+
+			<property name="build.dest.transport_systems" value="${build.dest}/transport_systems"/>
+					
+			<mkdir dir="${build.dest.transport_systems}"/>
+			<mkdir dir="${build.dest.transport_systems}/META-INF"/>
+
+			<property name="src.transport_systems" value="${ws.transport_systems}/src"/>
+			<property name="lib.transport_systems" value="${ws.transport_systems}/lib"/>
+
+			<echo message="Copy and compile code: ${src.transport_systems}"/>
+			<echo message="Copy lib: ${lib.transport_systems}"/>
+
+			<!-- copy src files -->
+			<copy todir="${build.src}/transport_systems" overwrite="yes">
+				<fileset 
+				    dir="${src.transport_systems}"
+				    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip, **/RunPSort.java, **/PSort.java ">
+				</fileset>
+			</copy>
+
+		<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false">
+				<fileset 
+				    dir="${lib.transport_systems}"
+				    includes="*/** *.jar *.zip">
+				</fileset>
+			</copy>
+
+
+			<path id="classpath">
+				<fileset dir="${jars.dir}" includes="*.jar *.zip">
+				</fileset>
+			</path>
+
+			<javac srcdir="${build.src}/transport_systems"
+	           		destdir="${build.dest.transport_systems}"
+				debug="${debug}"
+				optimize="${optimize}"
+				verbose="${verbose}"
+				source="1.7"
+				target="1.7"
+				classpathref="classpath">
+			</javac>
+
+			<manifest file="${build.dest.transport_systems}/META-INF/MANIFEST.MF">
+				<section name="Transport_Systems}">
+					<attribute name="Specification-Title" value="Utilities"/>
+					<attribute name="Specification-Version" value="${api.version}"/>
+					<attribute name="Implementation-Title" value="Utilities"/>
+					<attribute name="Implementation-Version" value="${version}"/>
+				</section>
+			</manifest>
+
+			
+			<jar jarfile="${jars.dir}/transport_systems_${version}.jar" basedir="${build.dest.transport_systems}" manifest="${build.dest.transport_systems}/META-INF/MANIFEST.MF"/>
+		</target>
+	
+	<target name="build-merlinCore" depends="-build-utilities,-build-mySQLConnector,-build-bioAPIs, -build-bioComponents,-build-sw_cluster,-build-merlin_utilities, -build-transport_systems, -build-gpr_rules" description="Build merlin">
+		
+		<property name="merlin.lib" value="${ws.merlin}/lib"/>
+		<mkdir dir="${plugins.bin}"/>
+		<copy todir="${plugins.bin}" overwrite="yes">
+			<fileset 
+			    dir="${ws.merlin}/plugins_bin"
+			    includes="*.jar">
+			</fileset>
+		</copy>
+		<copy todir="${jars.dir}" overwrite="yes" flatten="true" includeEmptyDirs="false">
+			<fileset 
+			    dir="${merlin.lib}"
+			    includes="*/** *.jar *.zip">
+			</fileset>
+		</copy>
+		
+		<echo message="${jars.dir}"/>
+
+		
+		<property name="build.dest.merlin" value="${build.dest}/merlin"/>
+		<mkdir dir="${build.dest.merlin}"/>
+		<property name="merlin.core.src" value="${ws.merlin}/plugins_src/merlin_core"/>
+		<mkdir dir="${build.dest.merlin}/META-INF"/>
+		<mkdir dir="${build.src}/merlincore"/>
+		<copy todir="${build.src}/merlincore" overwrite="yes">
+			<fileset 
+			    dir="${merlin.core.src}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip, **/deprecated/, **/parsers/ **/smith_waterman/">
+			</fileset>
+		</copy>
+		<path id="classpath">
+			<fileset dir="${jars.dir}" includes="*.jar *.zip">
+			</fileset>
+			<fileset dir="${plugins.bin}" includes="*.jar *.zip">
+			</fileset>
+		</path>
+		<javac srcdir="${build.src}/merlincore"
+           		destdir="${build.dest.merlin}"
+			debug="${debug}"
+			optimize="${optimize}"
+			verbose="${verbose}"
+			source="1.7"
+			target="1.7"
+			classpathref="classpath">
+		</javac>
+		<manifest file="${build.dest.merlin}/META-INF/MANIFEST.MF">
+			<section name="merlin_core}">
+				<attribute name="Specification-Title" value="Utilities"/>
+				<attribute name="Specification-Version" value="${api.version}"/>
+				<attribute name="Implementation-Title" value="Utilities"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+			</section>
+		</manifest>
+		<copy todir="${build.dest.merlin}" overwrite="yes">
+			<fileset 
+			    dir="${build.src}/merlincore"
+				excludes="**/*.java">
+			</fileset>
+		</copy>
+		
+		<jar jarfile="${plugins.bin}/merlin_core_${version}.jar" basedir="${build.dest.merlin}" manifest="${build.dest.merlin}/META-INF/MANIFEST.MF"/>
+		
+		<antcall target="clear">
+			</antcall>
+	</target>
+
+	<!--<target name="build-saveloadquit">
+
+		<property name="build.dest.slq" value="${build.dest}/saveloadquit"/>
+		<mkdir dir="${build.dest.slq}"/>
+
+		<property name="merlin.slq.src" value="${ws.merlin}/plugins_src/saveloadquit"/>
+		
+		<mkdir dir="${build.dest.slq}/META-INF"/>
+		<mkdir dir="${build.src}/saveloadquit"/>
+		<copy todir="${build.src}/saveloadquit" overwrite="yes">
+			<fileset 
+			    dir="${merlin.slq.src}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+			</fileset>
+		</copy>
+
+		<property name="conditional" value="build-saveloadquit-${platform}"/>
+
+		<antcall target="${conditional}">
+		</antcall>
+
+	</target>
+
+	<target name="build-extraviewers">
+		<property name="build.dest.extraviewers" value="${build.dest}/extraviewers"/>
+		<mkdir dir="${build.dest.extraviewers}"/>
+
+		<property name="merlin.extraviewers.src" value="${ws.merlin}/plugins_src/extraviewers"/>
+		
+		<mkdir dir="${build.dest.extraviewers}/META-INF"/>
+		<mkdir dir="${build.src}/extraviewers"/>
+		<copy todir="${build.src}/extraviewers" overwrite="yes">
+			<fileset 
+			    dir="${merlin.extraviewers.src}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+			</fileset>
+		</copy>
+
+		<path id="classpath">
+			<fileset dir="${jars.dir}" includes="*.jar *.zip">
+			</fileset>
+			<fileset dir="${plugins.bin}" includes="*.jar *.zip">
+			</fileset>
+		</path>
+
+		<javac srcdir="${build.src}/extraviewers"
+           		destdir="${build.dest.extraviewers}"
+			debug="${debug}"
+			optimize="${optimize}"
+			verbose="${verbose}"
+			source="1.7"
+			target="1.7"
+			classpathref="classpath">
+		</javac>
+
+
+		<manifest file="${build.dest.extraviewers}/META-INF/MANIFEST.MF">
+			<section name="linkouts}">
+				<attribute name="Specification-Title" value="Utilities"/>
+				<attribute name="Specification-Version" value="${api.version}"/>
+				<attribute name="Implementation-Title" value="Utilities"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+			</section>
+		</manifest>
+
+		<copy todir="${build.dest.extraviewers}" overwrite="yes">
+			<fileset 
+			    dir="${build.src}/extraviewers"
+				excludes="**/*.java">
+			</fileset>
+		</copy>		
+		<jar jarfile="${plugins.bin}/extraviewers${version}.jar" basedir="${build.dest.extraviewers}" manifest="${build.dest.extraviewers}/META-INF/MANIFEST.MF"/>
+
+	</target>
+
+	<target name="build-optKnock" depends="init" description="Build OptKnock Plugin">
+		<property name="build.dest.optknock4merlin" value="${build.dest}/optknock4merlin"/>
+		<mkdir dir="${build.dest.optknock4merlin}"/>
+
+		<property name="merlin.optknock4merlin.src" value="${workspace}/OptKnock4merlin/plugins_src/optknock4merlin"/>
+		
+		<mkdir dir="${build.dest.optknock4merlin}/META-INF"/>
+		<mkdir dir="${build.src}/optknock4merlin"/>
+		<copy todir="${build.src}/optknock4merlin" overwrite="yes">
+			<fileset 
+			    dir="${merlin.optknock4merlin.src}"
+			    excludes="**/.svn*, **/*.class, **/*~, **/*.tgz, **/*.zip ">
+			</fileset>
+		</copy>
+
+		<path id="classpath">
+			<fileset dir="${jars.dir}" includes="*.jar, *.zip">
+			</fileset>
+			<fileset dir="${plugins.bin}" includes="*.jar, *.zip">
+			</fileset>
+		</path>
+
+
+		<echo message="${build.src}/optknock4merlin"/>
+		<echo message="${build.dest.optknock4merlin}"/>
+		<javac srcdir="${build.src}/optknock4merlin"
+           		destdir="${build.dest.optknock4merlin}"
+			debug="${debug}"
+			optimize="${optimize}"
+			verbose="${verbose}"
+			source="1.7"
+			target="1.7"
+			classpathref="classpath">
+		</javac>
+
+
+		<manifest file="${build.dest.optknock4merlin}/META-INF/MANIFEST.MF">
+			<section name="optknock4merlin}">
+				<attribute name="Specification-Title" value="Utilities"/>
+				<attribute name="Specification-Version" value="${api.version}"/>
+				<attribute name="Implementation-Title" value="Utilities"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+			</section>
+		</manifest>
+
+		<copy todir="${build.dest.optknock4merlin}" overwrite="yes">
+			<fileset 
+			    dir="${build.src}/optknock4merlin"
+				excludes="**/*.java">
+			</fileset>
+		</copy>
+
+		
+		<jar jarfile="${plugins.bin}/optknock4merlin${version}.jar" basedir="${build.dest.optknock4merlin}" manifest="${build.dest.optknock4merlin}/META-INF/MANIFEST.MF"/>
+
+	</target>-->
+
+<!-- =================================================================== -->
+<!-- Construct merlin                                             -->
+<!-- =================================================================== -->
+
+	<!-- ================================= 
+          target: buid application              
+         ================================= -->
+    <target name="buid-app" description="Build Application directory and runnable files">
+    	
+    	<copy todir="${base_dir}/conf" overwrite="yes">
+			<fileset dir="${ws.merlin}/conf"/>
+		</copy>
+    	<copy tofile="${base_dir}/cache.ccf" overwrite="yes">
+    				<fileset file="${ws.merlin}/cache.ccf"/>
+    			</copy>
+    	<copy todir="${base_dir}/utilities" overwrite="yes">
+    		<fileset dir="${ws.merlin}/utilities"/>
+    	</copy>
+    	
+    	<antcall target="-license"/>
+    	<antcall target="-workbenchfile"/>
+    	
+    	<property name="build" value="-build-app-${platform}"/>		
+    	<echo message="command: ${build}"/>
+    	<antcall target="${build}"/>
+    </target>
+
+	
+    <target name="-build-app-unix">
+		<antcall target="-runfile-unix"/>
+    	<antcall target="-build-dir-app"/>
+    	<mkdir dir="${base_dir}/merlin/lib/empty_dir"/>
+    	<delete dir="${base_dir}/libunix64"/>
+    </target>
+	
+	<target name="-build-app-win">
+		<copy todir="${base_dir}/jre7" overwrite="yes">
+			<fileset dir="${ws.merlin}/jre7"/>
+		</copy>
+		<antcall target="-runfile-win"/> 
+		<antcall target="-build-dir-app"/>
+		<delete dir="${base_dir}/jre7"/>
+		<delete dir="${base_dir}/libwin32"/>
+	</target>
+	
+	<target name="-build-app-darwin">
+		<property name="merlin.app.location" value="${base_dir}/merlin.app"/>
+		<antcall target="-create-darwin-structure"/>
+		<antcall target="-create-plist-file"/>
+		<antcall target="-runfile-darwin"/>
+	</target>
+	
+	<target name="-build-dir-app">
+		<property name="merlin.dir" value= "${base_dir}/merlin"/>
+		<mkdir dir="${merlin.dir}"/>
+	
+		<copy todir="${merlin.dir}" overwrite="yes">
+			<fileset 
+				dir="${base_dir}/."
+				excludes="${name}">
+			</fileset>
+		</copy>
+		
+		<antcall target="-clear_all"/>
+	</target>
+	
+	<target name="-clear_all">
+		<delete dir="${base_dir}/plugins_bin"/>
+		<delete dir="${base_dir}/build"/>
+		<delete dir="${base_dir}/conf"/>
+		<delete dir="${base_dir}/utilities"/>
+		<delete dir="${base_dir}/lib"/>
+		<delete>
+		    <fileset dir="${base_dir}" includes="*"/>
+		  </delete>
+	</target>
+	
+    <target name="-create-darwin-structure">
+    	
+    	<mkdir dir="${merlin.app.location}/Contents/MacOS"/>
+    	<mkdir dir="${merlin.app.location}/Contents/Resources"/>
+    	
+    	<copy todir="${merlin.app.location}/Contents/Resources/conf" overwrite="yes">
+    		<fileset dir="${base_dir}/conf"/>
+    	</copy>
+    	
+    	<copy todir="${merlin.app.location}/Contents/Resources/utilities" overwrite="yes">
+    	 	<fileset dir="${base_dir}/utilities"/>
+    	 </copy>
+    	
+    	<copy todir="${merlin.app.location}/Contents/Resources/lib" overwrite="yes">
+    		<fileset dir="${base_dir}/lib"/>
+    	</copy>
+    	
+    	<copy todir="${merlin.app.location}/Contents/Resources/libdarwin64" overwrite="yes">
+    		<fileset dir="${base_dir}/libdarwin64"/>
+    	</copy>
+    	
+    	<chmod dir="${merlin.app.location}/Contents/Resources/libdarwin64" perm="a+x"/>
+    	
+    	<copy todir="${merlin.app.location}/Contents/Resources/plugins_bin" overwrite="yes">
+			<fileset dir="${base_dir}/plugins_bin"/>
+    	</copy>
+    	
+    	<copy file="${base_dir}/LICENSE.txt" tofile="${merlin.app.location}/LICENSE.txt"/>
+    	<copy file="${base_dir}/conf/merlin.icns" tofile="${merlin.app.location}/Contents/Resources/merlin.icns"/>
+    	
+    	<antcall target="-clear_all"/>
+    	<delete dir="${base_dir}/libdarwin64"/>
+    	
+    </target>
+
+	<target name="create-dmg" description="Create *.DMG Only for mac users">
+		<property name="installer" value="${base_dir}/merlin (v${version})"/>
+		<mkdir dir="${installer}"/>
+		<copy file="${base_dir}/merlin.app/LICENSE.txt" tofile="${base_dir}/merlin (v${version})/LICENSE.txt"/>
+		
+		<copy todir="${installer}/merlin.app" overwrite="yes">
+			<fileset dir="${base_dir}/merlin.app"/>
+		</copy>
+		
+		<chmod dir="${installer}/merlin.app/Contents/Resources/libdarwin64" includes="*" perm="a+x"/>
+		<chmod file="${installer}/merlin.app/Contents/MacOS/merlin" perm="a+x"/>
+		<chmod file="${installer}/merlin.app/" perm="+rw"/>
+		
+		<exec executable="hdiutil">
+			<arg value="create"/>
+			<arg value="-fs"/>
+			<arg value="HFS+"/>
+			<arg value="-volname"/>
+			<arg value="merlin (v${version})"/>
+			<arg value="-srcfolder"/>
+			<arg value="${installer}"/>
+			<arg value="${base_dir}/merlin (v${version}).dmg"/>
+		</exec>
+
+		<delete dir="${base_dir}/merlin (v${version})"/>
+	</target>
+	
+<!-- =================================================================== -->
+<!-- Create Dynamic Files                                      -->
+<!-- =================================================================== -->
+
+
+    <target name="-create-plist-file">
+    	<echo file="${merlin.app.location}/Contents/Info.plist" append="false">
+    	<![CDATA[ 
+    		<?xml version="1.0" encoding="UTF-8"?>
+    		<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    		<plist version="1.0">
+    		<dict>
+    			<key>NSPrefPaneIconFile</key>
+    			<string>merlin.icns</string>
+    			<key>CFBundleAllowMixedLocalizations</key>
+    			<string>true</string>
+    			<key>CFBundleIconFile</key>
+    			<string>merlin.icns</string>
+    		</dict>
+    		</plist>
+    	]]>
+		</echo> 
+    </target>
+
+	<target name="-runfile-darwin">
+		<echo file="${merlin.app.location}/Contents/MacOS/merlin" append="false">#!/bin/bash
+MACOS_DIR=$(dirname "$0")
+APP_PACKAGE=$MACOS_DIR/../..
+
+RESOURCES=$APP_PACKAGE/Contents/Resources
+#CLASSPATH="$RESOURCES/lib/*:$RESOURCES/libdarwin64/*"
+#JAR_ARGS="$RESOURCES/plugins_bin"
+#DYLD_LIBRARY_PATH="$RESOURCES/libdarwin64"
+
+RESOURCES_NEW=Contents/Resources;
+CLASSPATH=$RESOURCES_NEW/lib/*:$RESOURCES_NEW/libdarwin64/*
+JAR_ARGS=$RESOURCES_NEW/plugins_bin
+PATH=$PATH:$RESOURCES_NEW/libdarwin64
+DYLD_LIBRARY_PATH=$RESOURCES_NEW/libdarwin64
+
+MAIN_CLASS=es.uvigo.ei.aibench.Launcher
+LAF=-Dswing.defaultlaf=com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel
+LOCALE=-Duser.language=en
+CHARSET=-Dfile.encoding=utf-8
+LPATH=-Djava.library.path=$DYLD_LIBRARY_PATH
+MACMENU=-Dapple.laf.useScreenMenuBar=true
+APP_NAME_MAC=-Xdock:name=merlin
+APP_ICON_MAC=-Xdock:icon=$RESOURCES_NEW/merlin.icns
+	
+cd "$APP_PACKAGE"
+
+echo MACOS DIR: $MACOS_DIR
+echo APP_PACKAGE: $APP_PACKAGE
+echo RESOURCES: $RESOURCES
+echo CLASSPATH: $CLASSPATH
+echo JAR_ARGS: $JAR_ARGS
+echo PATH: $PATH
+echo DYLD_LIBRARY_PATH: $DYLD_LIBRARY_PATH
+echo
+echo APP_ICON_MAC: $APP_ICON_MAC
+
+
+export PATH=$PATH
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH
+
+echo
+echo
+java -d64 ${LOCALE} ${CHARSET} ${MACMENU} ${APP_NAME_MAC} ${APP_ICON_MAC} ${APP_ICON_MAC} -cp ${CLASSPATH} ${MAIN_CLASS} ${JAR_ARGS}
+
+rm inputFile.0*
+		</echo>
+		<chmod file="${merlin.app.location}/Contents/MacOS/merlin" perm="a+x"/>
+	</target>
+	
+	<target name="-runfile-win">
+	<echo file="${base_dir}/merlin.bat" append="false">
+		SET HOME=%~d0%~sp0
+		wscript.exe %HOME%"utilities/invis.vbs" %HOME%"utilities/run.bat"%*
+	</echo>
+	
+	<echo file="${base_dir}/utilities/invis.vbs" append="false">
+		<![CDATA[ 
+		set args = WScript.Arguments
+		num = args.Count
+
+		if num = 0 then
+		    WScript.Echo "Usage: [CScript | WScript] invis.vbs aScript.bat <some script arguments>"
+		    WScript.Quit 1
+		end if
+
+		sargs = ""
+		if num > 1 then
+		    sargs = " "
+		    for k = 1 to num - 1
+		    	anArg = args.Item(k)
+		    	sargs = sargs & anArg & " "
+		    next
+		end if
+
+		Set WshShell = WScript.CreateObject("WScript.Shell")
+
+		WshShell.Run """" & WScript.Arguments(0) & """" & sargs, 0, False
+		]]>
+	</echo>	
+	
+	<echo file="${base_dir}/utilities/run.bat" append="false">
+	@echo off
+	REM ###############################################################################################
+	REM #
+	REM # run.bat - merlin version ${version} for Win x86
+	REM # 
+	REM # IBB-CEB - Institute for Biotechnology and  Bioengineering - Centre of Biological Engineering
+	REM # CCTC - Computer Science and Technology Center
+	REM # University of Minho
+	REM #
+	REM # Created inside the SysBioPSEG Research Group (http://sysbio.uminho.pt)
+	REM # University of Minho
+	REM #
+	REM # Copyright (c) ${YEAR}.
+	REM #
+	REM # http://www.merlin-sysbio.org
+	REM #
+	REM ###############################################################################################
+	
+	SET APP_NAME="merlin - MEtabolic models Reconstruction using genome-scaLe INformation v${version}"
+	
+	SET MERLIN_HOME=%~d0%~sp0../
+	
+	REM cd %merlin_HOME%
+	SET %MERLIN_HOME%lib;path=%path%
+	
+	REM SET path=%path%;%merlin_HOME%lib;%merlin_HOME%libwin32
+	
+	SET CLASSPATH="./lib\*;"
+	REM .\libwin32\*"
+	SET JAR_ARGS=%MERLIN_HOME%"plugins_bin"
+	
+	SET MAIN_CLASS="es.uvigo.ei.aibench.Launcher"
+	
+	SET JAVA="%merlin_HOME%jre7\bin\java"
+	
+	SET LPATH="-Djava.library.path=%merlin_HOME%lib";%merlin_HOME%
+	SET LAF="-Dswing.defaultlaf=com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"
+	SET	LEGACY="-Djava.util.Arrays.useLegacyMergeSort=true"
+	SET LOCALE="-Duser.language=en"
+	SET CHARSET="-Dfile.encoding=utf-8"
+	SET MAXMEM="-Xmx1024M"
+	SET MINMEM="-Xms512m"
+	
+	SET COMMAND=%JAVA% %LAF% %LEGACY% %LPATH% %LOCALE% %CHARSET% %MAXMEM% %MINMEM% -cp %CLASSPATH% %MAIN_CLASS% %JAR_ARGS%
+	
+	%COMMAND%
+	</echo>
+	
+	<chmod file="${base_dir}/merlin.bat" perm="a+x"/>
+	<chmod file="${base_dir}/invis.vbs" perm="a+x"/>
+	<chmod file="${base_dir}/run.bat" perm="a+x"/>
+	</target>
+	
+	<target name="-runfile-unix">
+	<echo file="${base_dir}/run.sh" append="false">
+	#!/bin/sh
+	###############################################################################################
+	#
+	# run.sh - merlin version ${version} for Linux 64
+	# 
+	# IBB-CEB - Institute for Biotechnology and  Bioengineering - Centre of Biological Engineering
+	# CCTC - Computer Science and Technology Center
+	# University of Minho
+	#
+	# Created inside the SysBio Research Group (http://sysbio.uminho.pt)
+	# University of Minho
+	#
+	# http://www.merlin-sysbio.org
+	#	
+	# Copyright (c) ${YEAR}.
+	#
+	###############################################################################################
+	
+	
+	APP_NAME="merlin - MEtabolic models Reconstruction using genome-scaLe INformation ${version}"
+
+	progdir=`dirname $0`
+ 	cd $progdir
+ 	echo "scriptpath = $PWD"
+		
+	merlin_HOME="`pwd`"
+	
+	CLASSPATH="$PWD/lib/empty_dir:$PWD/lib/*:"
+	
+	#./libunix64/*
+	
+	#export PATH=$PATH/":`pwd`/libunix64"
+	#export LD_LIBRARY_PATH="`pwd`/libunix64"
+		
+	export PATH=$PATH/":`pwd`/lib"
+	export LD_LIBRARY_PATH="`pwd`/lib"
+	
+	JAR_ARGS="plugins_bin"
+
+	MAIN_CLASS="es.uvigo.ei.aibench.Launcher"
+	
+	LAF="-Dswing.defaultlaf=com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"
+	LEGACY="-Djava.util.Arrays.useLegacyMergeSort=true"
+	LOCALE="-Duser.language=en"
+	CHARSET="-Dfile.encoding=utf-8"
+	#LPATH="-Djava.library.path=`pwd`/libunix64"
+	LPATH="-Djava.library.path=`pwd`/lib"
+	MAXMEM="-Xmx1024M"
+	MINMEM="-Xms512m"
+	
+	echo java ${LPATH} ${MAXMEM} ${MINMEM} ${LAF} ${LEGACY} ${LOCALE} ${CHARSET} -cp ${CLASSPATH} ${MAIN_CLASS} ${JAR_ARGS}
+	java ${LPATH} ${MAXMEM} ${MINMEM} ${LAF} ${LEGACY} ${LOCALE} ${CHARSET} -cp ${CLASSPATH} ${MAIN_CLASS} ${JAR_ARGS}
+	</echo>
+	<chmod file="${base_dir}/run.sh" perm="a+x"/>
+	</target>
+	
+	<target name="-license">
+	<echo file="${base_dir}/LICENSE.txt" append="false">
+	Copyright ${year}
+	IBB-CEB - Institute for Biotechnology and Bioengineering - Centre of Biological Engineering
+	CCTC - Computer Science and Technology Center
+	
+	University of Minho
+	 
+	This is free software: you can redistribute it and/or modify 
+	it under the terms of the GNU Public License as published by 
+	the Free Software Foundation, either version 3 of the License, or 
+	(at your option) any later version. 
+	 
+	This code is distributed in the hope that it will be useful, 
+	but WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	GNU Public License for more details. 
+	
+	You should have received a copy of the GNU Public License 
+	along with this code. If not, see http://www.gnu.org/licenses/ 
+	
+	Created inside the SysBioPseg Research Group (http://sysbio.uminho.pt)
+	
+	http://www.merlin-sysbio.org
+	</echo>
+	</target>
+	
+	<target name="-workbenchfile">
+	<echo file="${base_dir}/conf/workbench.conf" append="false">
+	# Workbench configuration file
+	
+	#
+	# Main Window Title
+	#
+	mainwindow.title=merlin -  MEtabolic models Reconstruction using genome-scaLe INformation - v${version}
+	
+	#
+	# Status Bar visibility
+	#
+	mainwindow.statusbar.visible=true
+	
+	#
+	# Menu Bar visibility
+	#
+	mainwindow.menubar.visible=true
+	
+	##
+	## WORKBENCH CORE COMPONENTS. These are the default GUI components. You can hide or move them if you want
+	##
+	
+	#
+	# Document Viewer. Allways show the default viewer, regardless there is a specific viewer also defined. Default is false
+	#
+	documentviewer.allways_show_default_view=false
+	
+	#
+	# Default View. Use a table to display arrays and collections instead of the toString text area
+	#
+	defaultview.use_table_for_collections_and_arrays=false
+	
+	#
+	# Session Tree visibility
+	#
+	sessiontree.visible=false
+	
+	#
+	# Session Tree slot in the layouting system. Please see also /conf/template.xml
+	#
+	sessiontree.slot=left
+	
+	#
+	# Clipboard Tree visibility
+	#
+	clipboardtree.visible=true
+	
+	#
+	# Session Tree slot in the layouting system. Please see also /conf/template.xml
+	#
+	clipboardtree.slot=left
+	
+	#
+	# Clipboard Tree organizes datatypes instances by their class
+	#
+	clipboardtree.organizebyclass=false
+	
+	#
+	# Tree null treatment. In Explicit-datatypes and with Structure=COMPLEX, should subitems should be displayed or not in trees?.
+	# Default is true
+	#
+	#trees.shownulls=false
+	
+	#
+	# Log Area visibility
+	#
+	logarea.visible=true
+	#
+	# Log Area max chars
+	# Default: -1 (no limit, caution)
+	#
+	logarea.maxsize=10000
+	
+	#
+	# Log Area slot in the layouting system. Please see also /conf/template.xml
+	#
+	logarea.slot=bottom
+	
+	#
+	# Memory Monitor visibility
+	#
+	memorymonitor.visible=true
+	
+	#
+	# Memory Monitor slot in the layouting system. Please see also /conf/template.xml
+	#
+	memorymonitor.slot=bottom
+	
+	#
+	# ToolBar visibility
+	#
+	toolbar.visible=true
+	
+	#
+	# ToolBar names visibility
+	#
+	toolbar.showOperationNames=true
+	
+	#
+	# ToolBar initial position
+	# position values are NORTH | SOUTH | EAST | WEST
+	#
+	toolbar.position=NORTH
+	
+	#
+	# ToolBar separators
+	#
+	# Define where the separators are shown
+	# they will be placed after the operation that appears in that relative order in the toolbar
+	# Separated by commas (,)
+	#
+	#toolbar.separators=1,2,3
+	
+	#
+	# Operations visibility. By default, all operations are displayed everywhere (main menu, popup menu and dialogs). But if
+	# you want to change this behaviour, use this option.
+	# 
+	# The current available options are (you can put more than one, separated with spaces)
+	#  MENU - the operation can be accessed from the main menu
+	#  POPUP - the operation can be accessed from the popup menu showed in the trees
+	#  DIALOG - the operation can be accessed from dialogs 
+	#  TOOLBAR - the operation can be accessed from the toolbar
+	# your_operation_uid.visibility= POPUP DIALOG MENU TOOLBAR
+	
+	
+	#Menu position overriding
+	#All plugins can choose an arbitrary position of their operations in menus. If you want to choose them
+	#you can override this default position
+	#example:
+	#menu.file=1
+	#menu.file.export=2
+	</echo>
+	</target>
+
+</project>
+
