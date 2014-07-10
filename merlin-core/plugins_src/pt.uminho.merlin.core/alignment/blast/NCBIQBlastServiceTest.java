@@ -15,7 +15,7 @@ import org.biojava3.core.sequence.io.FastaReaderHelper;
 
 import alignment.blast.ebi.rest.EbiBlastClientRest;
 import alignment.blast.org.biojava3.ws.alignment.qblast.NCBIQBlastAlignmentProperties;
-import alignment.blast.org.biojava3.ws.alignment.qblast.NCBIQBlastOutputProperties;
+//import alignment.blast.org.biojava3.ws.alignment.qblast.NCBIQBlastOutputProperties;
 
 public class NCBIQBlastServiceTest {
 	/**
@@ -30,7 +30,7 @@ public class NCBIQBlastServiceTest {
 
 		EbiBlastClientRest rbw;
 		NCBIQBlastAlignmentProperties rqb;
-		NCBIQBlastOutputProperties rof;
+		//NCBIQBlastOutputProperties rof;
 		InputStream is;
 		ConcurrentLinkedQueue<String> rids = new ConcurrentLinkedQueue<String>();
 		String request = "";

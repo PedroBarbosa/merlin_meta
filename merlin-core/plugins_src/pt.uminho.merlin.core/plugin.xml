@@ -72,6 +72,16 @@
 		<extension uid="aibench.workbench" name="aibench.workbench.view" >
 			<icon-operation operation="operations.EbiBlastSimilaritySearch.ID" icon="icons/Lyfecycle/Folder_Remote.png"/>
         </extension>
+        
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition" class="operations.LocalBlastSimilaritySearch">
+			<operation-description name="BLAST annotation (Local)" path="2@Enzymes/" uid= "operations.LocalBlastSimilaritySearch.ID"/>
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view" >
+			<icon-operation operation="operations.LocalBlastSimilaritySearch.ID" icon="icons/Lyfecycle/FolderBlue.png"/>
+        </extension>
 		
 		  <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	-->
 		  
@@ -349,11 +359,12 @@
 			
 			<!-- %%%%%  Metagenomic Views %%%%%	-->
 			
-			<view name="Metagenomics taxonomy view" datatype="datatypes.metagenomic.TaxonomyMetaContainer" class="views.metagenomic.TaxonomyMetaView"/>
+			<view name="Metagenomics taxonomy view" datatype="datatypes.metagenomics.TaxonomyMetaContainer" class="views.metagenomics.TaxonomyMetaView"/>
 			
-			<view name="Metagenomics enzymes view" datatype="datatypes.metagenomic.EnzymesMetaContainer" class="views.metagenomic.EnzymesMetaView"/>
+			<view name="Metagenomics enzymes view" datatype="datatypes.metagenomics.EnzymesMetaContainer" class="views.metagenomics.EnzymesMetaView"/>
 			
-			<view name="Metagenomics pathways view" datatype="datatypes.metagenomic.PathwaysMetaContainer" class="views.metagenomic.PathwaysMetaView"/>
+			<view name="Metagenomics pathways view" datatype="datatypes.metagenomics.PathwaysMetaContainer" class="views.metagenomics.PathwaysMetaView"/>
+		
 			
 			<!-- %%%%%  Metabolic Views %%%%%	-->
 			<view name="Reagent/Products view" datatype="datatypes.metabolic.ReagentProducts" class="views.metabolic.ReagentProductsView"/>	
@@ -390,16 +401,15 @@
 			
 			<view name="Entity view" datatype="datatypes.metabolic_regulatory.Proteins" class="views.metabolic_regulatory.EntityView"/>
 			
-			<view name="Entity view" datatype="datatypes.metabolic_regulatory.HomologyDataContainer" class="views.metabolic_regulatory.EntityView"/>
+			<view name="Stats" datatype="datatypes.metabolic_regulatory.HomologyDataContainer" class="views.metabolic_regulatory.EntityView"/>
 			
 			<!-- %%%%%  Metagenomic Views %%%%%	-->
 			
-			<view name="Entity view" datatype="datatypes.metagenomic.TaxonomyMetaContainer" class="views.metabolic_regulatory.EntityView"/>
+			<view name="Stats" datatype="datatypes.metagenomics.TaxonomyMetaContainer" class="views.metabolic_regulatory.EntityView"/>
 			
-			<view name="Entity view" datatype="datatypes.metagenomic.EnzymesMetaContainer" class="views.metabolic_regulatory.EntityView"/>
+			<view name="Stats" datatype="datatypes.metagenomics.EnzymesMetaContainer" class="views.metabolic_regulatory.EntityView"/>
 			
-			<view name="Entity view" datatype="datatypes.metagenomic.PathwaysMetaContainer" class="views.metabolic_regulatory.EntityView"/>
-			
+			<view name="Stats" datatype="datatypes.metagenomics.PathwaysMetaContainer" class="views.metabolic_regulatory.EntityView"/>	
 			
 			<!-- %%%%%  Metabolic Views %%%%%	-->
 			<view name="Entity view" datatype="datatypes.metabolic.ReactionsContainer" class="views.metabolic_regulatory.EntityView"/>

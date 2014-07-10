@@ -171,7 +171,12 @@ public class NcbiBlastSimilaritySearch {
 				extension = ".fna";
 			}
 			Map<String, ProteinSequence> sequences = CreateGenomeFile.getGenomeFromID(project.getGenomeCodeName(), extension);
-			this.blast_loader = new SearchAndLoadHomologueSequences(sequences, project, project.isNCBIGenome(),Source.ncbi);
+			if(sequences == null){
+				Workbench.getInstance().error("No sequences to BLAST. Please add a genome/metagenome file to this project!");
+			}
+			else{
+				this.blast_loader = new SearchAndLoadHomologueSequences(sequences, project, project.isNCBIGenome(),Source.ncbi);
+			}
 			
 			//it has to be milliseconds
 			this.blast_loader.setLatencyWaitingPeriod(this.latencyWaitingPeriod*60000);

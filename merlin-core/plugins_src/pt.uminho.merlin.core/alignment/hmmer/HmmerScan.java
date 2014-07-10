@@ -26,7 +26,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import pt.uminho.sysbio.merlin.utilities.MySleep;
 

@@ -7,43 +7,28 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-
-import java.util.GregorianCalendar;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import pt.uminho.sysbio.merlin.utilities.TimeLeftProgress;
-import operations.LocalBlastSimilaritySearch.WordSize;
-
 import org.apache.axis2.AxisFault;
-import org.biojava3.core.sequence.ProteinSequence;
 
+import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
+import pt.uminho.sysbio.common.utilities.io.FileUtils;
 import pt.uminho.sysbio.merge.databases.containers.FastaSequence;
 import pt.uminho.sysbio.merge.databases.containers.HomologySetup;
-import pt.uminho.sysbio.common.utilities.io.FileUtils;
-
-
-
-import pt.uminho.sysbio.common.local.alignments.core.PairwiseSequenceAlignement.Matrix;
 import alignment.ProcessHomologySetup;
-import alignment.SearchAndLoadHomologueSequences;
 import alignment.localblast.BlastArguments;
 import alignment.localblast.LocalBlast;
-import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import datatypes.Project;
 import es.uvigo.ei.aibench.core.operation.annotation.Cancel;
 import es.uvigo.ei.aibench.core.operation.annotation.Direction;
 import es.uvigo.ei.aibench.core.operation.annotation.Operation;
 import es.uvigo.ei.aibench.core.operation.annotation.Port;
-import es.uvigo.ei.aibench.core.operation.annotation.Progress;
 import es.uvigo.ei.aibench.workbench.Workbench;
-import pt.uminho.sysbio.common.bioapis.externalAPI.ncbi.CreateGenomeFile;
 
 /**
  * @author pedro
@@ -51,7 +36,7 @@ import pt.uminho.sysbio.common.bioapis.externalAPI.ncbi.CreateGenomeFile;
  */
 @Operation(description = "Perform a semi-automatic (re)annotation of the organism's genome / metagenome. This process may take several hours/ days, depending on the computer power availability" +
 		" and the number of genes to be processed. It also requires that blast is locally installed and one of the below available databases are created. If you are having troubles on setting up" +
-		" one of this prerequisites please go to the 'How To's' link on Merlin website where detailed user help on these steps is provided : http://www.merlin-sysbio.org/ ")
+		" one of this prerequisites please go to the documentation in the Merlin folder where detailed user help on these steps is provided.")
 public class LocalBlastSimilaritySearch {
 	private String program, uniprot_url;
 	private File txt_file, uniprotdb_path;
@@ -60,13 +45,9 @@ public class LocalBlastSimilaritySearch {
 	private String database, databaseDirectory;
 	private String numberOfAlignments;
 	private String eVal;
-	private TimeLeftProgress progress = new TimeLeftProgress();
-	private SearchAndLoadHomologueSequences blast_loader;
 	private BlastArguments blastArgumetns;
 	private LocalBlast localBlast;
-	private WordSize wordsize;
-	private String organism;
-	private boolean autoEval;
+	private AtomicBoolean cancel = new AtomicBoolean(false);
 
 
 	@Port(direction=Direction.INPUT, name="BLAST type", validateMethod="checkProgram",defaultValue="blastp",description="Blast program.",order=1)
@@ -87,7 +68,6 @@ public class LocalBlastSimilaritySearch {
 	public void setUniprotDBdownload(String uniprot_url) {
 		this.uniprot_url = uniprot_url;
 	}
-
 
 	@Port(direction=Direction.INPUT, name="Local Database",validateMethod= "checkDatabase", defaultValue="/path/to/database_file",description="Select one of the files ('database_name.psq', 'database_name.phr', 'database_name.pin') to make the link to the local database ",order=4)
 	public void setUniprotDBpath(File uniprotdb_path) {
@@ -112,7 +92,6 @@ public class LocalBlastSimilaritySearch {
 		}
 	}
 
-
 	@Port(direction=Direction.INPUT, name="Number of results",defaultValue="50",validateMethod="checkNumber_of_align",description="Select the maximum number of aligned sequences to display. Default: '50'",order=7)
 	public void setNumberOfAlignments(String numberOfAlignments) {
 
@@ -126,24 +105,16 @@ public class LocalBlastSimilaritySearch {
 		}
 	}
 
-//	@Port(direction=Direction.INPUT, name="Substitution matrix",defaultValue="AUTO",description="Assigns a score for aligning pairs of residues. Default: 'Adapts to Sequence length'.",order=8)
-//	public void setMatrix(BlastMatrix blastMatrix){
-//		this.blastMatrix = blastMatrix;
-//	}
-//
-//	@Port(direction=Direction.INPUT, name="Word size",defaultValue="auto",description="The length of the seed that initiates an alignment. Default: '3'",order=9)
-//	public void setWordSize(WordSize wordSize){
-//		this.wordsize = wordSize;
-//	}
+	//	@Port(direction=Direction.INPUT, name="Substitution matrix",defaultValue="AUTO",description="Assigns a score for aligning pairs of residues. Default: 'Adapts to Sequence length'.",order=8)
+	//	public void setMatrix(BlastMatrix blastMatrix){
+	//		this.blastMatrix = blastMatrix;
+	//	}
+	//
+	//	@Port(direction=Direction.INPUT, name="Word size",defaultValue="auto",description="The length of the seed that initiates an alignment. Default: '3'",order=9)
+	//	public void setWordSize(WordSize wordSize){
+	//		this.wordsize = wordSize;
+	//	}
 
-	/**
-	 * @return
-	 */
-	@Progress
-	public TimeLeftProgress getProgress(){
-
-		return progress;
-	}
 
 	/**
 	 * 
@@ -151,13 +122,9 @@ public class LocalBlastSimilaritySearch {
 	@Cancel
 	public void cancel() {
 
-		this.progress.setTime((GregorianCalendar.getInstance().getTimeInMillis()-GregorianCalendar.getInstance().getTimeInMillis()),1,1);
 		this.localBlast.setCancel();
-		
+
 	}
-
-
-
 
 	/**
 	 * @param project
@@ -173,70 +140,77 @@ public class LocalBlastSimilaritySearch {
 
 			//Map<String, ProteinSequence> sequences = CreateGenomeFile.getGenomeFromID(project.getGenomeID(), extension);
 
-//			short word = -1;
-//			if(this.wordsize.index()!=0) {
-//
-//				word = Short.parseShort(this.wordsize.index()+"");
-//			}
-//			if(word == -1){
-//				word = 3;
-//			}
-			
-			
+			//			short word = -1;
+			//			if(this.wordsize.index()!=0) {
+			//
+			//				word = Short.parseShort(this.wordsize.index()+"");
+			//			}
+			//			if(word == -1){
+			//				word = 3;
+			//			}
+
+
 			short word = 3;
 			this.blastArgumetns = new BlastArguments(this.eVal, Integer.parseInt(this.numberOfAlignments), this.blastMatrix.toString(), Short.toString(word));
 			File queryfile = new File(FileUtils.getCurrentTempDirectory().concat(project.getGenomeCodeName().concat(extension)));
 			this.localBlast = new LocalBlast(this.program, queryfile, this.txt_file, this.databaseDirectory, blastArgumetns.getArguments(), project);
+			LinkedHashMap<String, LinkedHashMap<String, String[]>> blastparse = new LinkedHashMap<>(); 
+			HashMap< String, FastaSequence > sequencesHash = new HashMap<>();
+			LinkedHashMap<String, LinkedHashMap<String, String[]>> hashfinal = new LinkedHashMap<>();
+			ConcurrentLinkedQueue<String> noSimilarities = new ConcurrentLinkedQueue<>();
+			String [] setupInfo = this.localBlast.setupInfo;
 			long startTime = System.currentTimeMillis();
-			this.localBlast.setProgress(this.progress);
-			while(!this.localBlast.isCancel().get()){
 
-//						if(!project.isNCBIGenome()) {
-//			
-//							this.blast_loader.setTaxonomicID(project.getTaxonomyID()+"");
-//						}
-
-
-				this.localBlast.runBlast();
-
-				LinkedHashMap<String, LinkedHashMap<String, String[]>> blastparse = this.localBlast.parseBlastOutput();
-				System.out.println("Blast output file parsed.\n");
-				HashMap< String, FastaSequence > sequencesHash = this.localBlast.saveSequences();
-				ConcurrentLinkedQueue<String> noSimilarities = this.localBlast.noSimilaritiesGenes;
-				String [] setupInfo = this.localBlast.setupInfo;
 			
+			if(!this.cancel.get()){
+				System.out.println("Local blast is running!");
+				this.localBlast.runBlast();		
+				blastparse = this.localBlast.parseBlastOutput();
+				System.out.println("Blast output file parsed.\n");
+				sequencesHash = this.localBlast.saveSequences();
+				noSimilarities = this.localBlast.noSimilaritiesGenes;
+				setupInfo = this.localBlast.setupInfo;
+			}
+			
+
+
+			if(!this.cancel.get()){
 				System.out.println("Number of genes to be processed:\t" + sequencesHash.size());
 				System.out.println("Blast output file parsed.\n" + "Number of genes without similarities:\t" + noSimilarities.size());
 				System.out.println("Retrieving homologues information... This may take a while");
-			
-				LinkedHashMap<String, LinkedHashMap<String, String[]>> hashfinal = this.localBlast.retrieveUniprotData(blastparse, this.txt_file);
-			
+				hashfinal = this.localBlast.retrieveUniprotData(blastparse, this.txt_file);
 				System.out.println("\n\nRetrieve of the Uniprot data finished!!");
+			}
 			
+			
+			System.out.println(this.cancel);
+			if(!this.cancel.get()){
 				HomologySetup homologySetup = new HomologySetup(setupInfo[0],setupInfo[1],setupInfo[2],this.blastArgumetns.getEvalue(),
-					this.blastArgumetns.getMatrix(), this.blastArgumetns.getWord_size(),
-					this.blastArgumetns.getGap_costs(), this.blastArgumetns.getNum_descriptions());
+						this.blastArgumetns.getMatrix(), this.blastArgumetns.getWord_size(),
+						this.blastArgumetns.getGap_costs(), this.blastArgumetns.getNum_descriptions());
 
 
 
 				Connection conn = (Connection) new Connection(this.project.getDatabase().getMySqlCredentials().get_database_host(), 
-					this.project.getDatabase().getMySqlCredentials().get_database_port(),this.project.getDatabase().getMySqlCredentials().get_database_name(), 
-					this.project.getDatabase().getMySqlCredentials().get_database_user(), 	this.project.getDatabase().getMySqlCredentials().get_database_password());
+						this.project.getDatabase().getMySqlCredentials().get_database_port(),this.project.getDatabase().getMySqlCredentials().get_database_name(), 
+						this.project.getDatabase().getMySqlCredentials().get_database_user(), 	this.project.getDatabase().getMySqlCredentials().get_database_password());
 
 
 				ProcessHomologySetup p = new ProcessHomologySetup(conn);
 				System.out.println("\nLoading now the data into the " + this.project.getDatabase().getMySqlCredentials().get_database_name() + " database...");
 				p.loadLocalBlast(sequencesHash, hashfinal, homologySetup, noSimilarities);
+
+			}
 			
 
-				long endTime = System.currentTimeMillis();
-				System.out.println("Total elapsed time in execution of local blast was: "+ String.format("%d min, %d sec", 
+			long endTime = System.currentTimeMillis();
+			System.out.println("Total elapsed time in execution of local blast was: "+ String.format("%d min, %d sec", 
 					TimeUnit.MILLISECONDS.toMinutes(endTime-startTime),TimeUnit.MILLISECONDS.toSeconds(endTime-startTime) 
 					-TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime-startTime))));
-				Workbench.getInstance().info("Loading Local Blast data into " +this.project.getDatabase().getMySqlCredentials().get_database_name()+" finished!");
+			Workbench.getInstance().info("Loading Local Blast data into " +this.project.getDatabase().getMySqlCredentials().get_database_name()+" finished!");
 
-		}
-			if(this.localBlast.isCancel().get()) {
+
+			if(this.cancel.get()) {
 				Workbench.getInstance().warn("BLAST process cancelled!");					
 			}
 		}
@@ -245,8 +219,6 @@ public class LocalBlastSimilaritySearch {
 		catch (ParseException e) {e.printStackTrace();}//e.printStackTrace();
 		catch (Exception e) {e.printStackTrace();}
 	}
-
-
 
 	public void checkProject(Project project) {
 
@@ -289,7 +261,6 @@ public class LocalBlastSimilaritySearch {
 		this.program = program.toString();
 	}
 
-
 	public void checkDatabase(File uniprotdb_path){
 
 		if(uniprotdb_path == null){
@@ -310,7 +281,7 @@ public class LocalBlastSimilaritySearch {
 			else{
 				throw new IllegalArgumentException("The local database file does not exist. Can not proceed!");	
 			}
-			
+
 		}
 	}
 
@@ -338,7 +309,7 @@ public class LocalBlastSimilaritySearch {
 			else {
 				throw new IllegalArgumentException("The text database file does not exist. Can not proceed!");	
 			}
-			
+
 		}
 	}
 
@@ -347,7 +318,7 @@ public class LocalBlastSimilaritySearch {
 		if (s.hasNextDouble()){
 			double ev = Double.parseDouble(evalue);
 			if(ev > 20000 || ev < 1E-200){
-				throw new IllegalArgumentException("Please select an eValue in a valid range");
+				throw new IllegalArgumentException("Please select an eValue in a valid range");				
 			}
 			else{
 				this.eVal = evalue;
@@ -356,7 +327,6 @@ public class LocalBlastSimilaritySearch {
 		else{
 			throw new IllegalArgumentException("Please select a valid eValue");
 		}
-
 
 	}
 
@@ -375,6 +345,7 @@ public class LocalBlastSimilaritySearch {
 			throw new IllegalArgumentException("Please select a valid number of results");
 		}
 	}
+	
 	enum RemoteDatabasesEnum{
 		swissprot,
 		uniprotKB
@@ -391,17 +362,13 @@ public class LocalBlastSimilaritySearch {
 		//	PAM250
 	}
 
-	/**
-	 * @author ODias
-	 *
-	 */
 	enum BlastProgram{
 		blastp,
 		//blastx,
-
 	}
 
 	enum WordSize{
+
 
 		auto (-1),
 		wordSize_2 (2),
@@ -417,4 +384,6 @@ public class LocalBlastSimilaritySearch {
 			return index; 
 		}
 	}
+	
+	
 }

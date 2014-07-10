@@ -4,23 +4,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 
-import alignment.localblast.BlastArguments;
-import alignment.localblast.LocalBlast;
-
-import pt.uminho.sysbio.merge.databases.readFromDatabase.RetrieveHomologyData;
-import pt.uminho.sysbio.merge.databases.readFromDatabase.RetrieveOldHomologyData;
-import pt.uminho.sysbio.merge.databases.containers.BlastSetup;
-import pt.uminho.sysbio.merge.databases.containers.FastaSequence;
-import pt.uminho.sysbio.merge.databases.containers.GeneBlast;
-import pt.uminho.sysbio.merge.databases.containers.GeneHomology;
-import pt.uminho.sysbio.merge.databases.containers.HomologySetup;
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import pt.uminho.sysbio.common.database.connector.datatypes.MySQLMultiThread;
+import pt.uminho.sysbio.merge.databases.containers.FastaSequence;
+import pt.uminho.sysbio.merge.databases.containers.GeneHomology;
+import pt.uminho.sysbio.merge.databases.containers.HomologySetup;
 
 public class ProcessHomologySetup {
 
@@ -36,57 +27,7 @@ public class ProcessHomologySetup {
 		this.mySQLMultiThread = connection.getMysqlMutithread();
 	}
 
-
-//	/**
-//	 * @param blastsetupList
-//	 * @throws SQLException
-//	 * @throws InterruptedException
-//	 */
-//	public void loadBlastSetup(List<BlastSetup> blastsetupList) throws SQLException, InterruptedException {
-//
-//		java.sql.Connection conn = this.mySQLMultiThread.openConnection();
-//		LoadedData loadedData = new LoadedData(conn.createStatement());
-//
-//		for (BlastSetup blastSetup : blastsetupList) {
-//
-//			LoadSimilarityResultstoDatabase loadData = new LoadSimilarityResultstoDatabase(conn.createStatement());
-//
-//			String blast_setup_key = loadData.loadHomologySetup(blastSetup.getDatabaseID(), blastSetup.getProgram(), blastSetup.getVersion(),
-//					blastSetup.geteValue(), blastSetup.getMatrix(), blastSetup.getWordSize(), blastSetup.getGapCosts(),
-//					blastSetup.getMaxNumberOfAlignments());
-//
-//			ConcurrentLinkedQueue<GeneBlast> geneBlastList = blastSetup.getGeneblast();
-//
-//			int numberOfCores = Runtime.getRuntime().availableProcessors()*3;
-//
-//			if(geneBlastList.size()<numberOfCores) {
-//
-//				numberOfCores=geneBlastList.size();
-//			}
-//			System.out.println("number Of threads: "+numberOfCores);
-//			List<Thread> threads = new ArrayList<Thread>();
-//
-//			for(int i=0; i<numberOfCores; i++) {
-//
-//				Runnable loadHomologyData = new RunLoadHomologyData(geneBlastList, loadedData, blast_setup_key,this.mySQLMultiThread);
-//
-//				Thread thread = new Thread(loadHomologyData);
-//				threads.add(thread);
-//				System.out.println("Start "+i);
-//				thread.start();
-//			}
-//
-//			for(Thread thread :threads) {
-//
-//				thread.join();
-//			}
-//
-//		}
-//		conn.close();
-//		System.out.println("\n LOADIND DATA TO DATABASE PROCESS IS FINISHED.");
-//	}
-
-		public void loadHomologySetup(List<HomologySetup> homologysetupList) throws SQLException, InterruptedException {
+	public void loadHomologySetup(List<HomologySetup> homologysetupList) throws SQLException, InterruptedException {
 	
 			java.sql.Connection conn = this.mySQLMultiThread.openConnection();
 			LoadedData loadedData = new LoadedData(conn.createStatement());
@@ -129,8 +70,6 @@ public class ProcessHomologySetup {
 			conn.close();
 			System.out.println("\n LOADIND DATA TO DATABASE PROCESS IS FINISHED.");
 		}
-
-		
 		
 	public void loadLocalBlast (HashMap<String, FastaSequence> sequencesHash, LinkedHashMap<String, LinkedHashMap<String, String[]>> blastlocalHash, HomologySetup homologySetup, ConcurrentLinkedQueue<String> noSimilarities) throws SQLException, InterruptedException{
 
@@ -182,36 +121,9 @@ public class ProcessHomologySetup {
 	}
 
 
-
-
-
-
 	public static void main (String [] args) throws Exception{
 
-		//######################## MERGE DATABASES OLD STRUCTURE ######################3
-		//Connection c1 = (Connection) new datatypes.Connection("192.168.1.143", "3306","HMP", "pedro", "password"); //FILE_3 REMOTELY
-		//	Connection c1 = (Connection) new datatypes.Connection("127.0.0.1", "3306","HMP", "root", "password"); // FILE_4 LOCAL
-		//	Connection c1 = (Connection) new datatypes.Connection("127.0.0.1", "3306","HMP_FILE1", "root", "password");
-		//	Connection c1 = (Connection) new datatypes.Connection("127.0.0.1", "3306","HMP_FILE2", "root", "password");
-		//	Connection c1 = (Connection) new datatypes.Connection("127.0.0.1", "3306","HMP_FILE3", "root", "password");
-		
-//		Connection c1 = (Connection) new datatypes.Connection("192.168.1.80", "3306","rop_pd", "root", "password");
-//		Connection c2 = (Connection) new datatypes.Connection("192.168.1.80", "3306","rop_pd_new", "root", "password");
-//	
-//		
-//		RetrieveOldHomologyData r = new RetrieveOldHomologyData(c1);
-//		r.retrieveAllData();
-//
-//		List<BlastSetup> blastSetupList = r.getBlastSetupFromDatabase();
-//		System.out.println(blastSetupList);
-//
-//		ProcessHomologySetup p = new ProcessHomologySetup(c2);
-//
-//		p.loadBlastSetup(blastSetupList);
-		
-		
-		
-		
+
 		//####################### MERGE DATABASES NEW STRUCTURE #####################
 		
 //		Connection c2 = (Connection) new datatypes.Connection("localhost", "3306","LOCALblast", "root", "password");

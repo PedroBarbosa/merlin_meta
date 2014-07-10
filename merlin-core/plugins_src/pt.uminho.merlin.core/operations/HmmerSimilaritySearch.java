@@ -115,8 +115,13 @@ public class HmmerSimilaritySearch {
 		try  {
 
 			Map<String, ProteinSequence> sequences = CreateGenomeFile.getGenomeFromID(project.getGenomeCodeName(), ".faa");
-			this.hmmer_loader = new SearchAndLoadHomologueSequences(sequences, project, project.isNCBIGenome(),Source.hmmer);
-			this.hmmer_loader.setTimeLeftProgress(this.progress);
+			if(sequences == null){
+				Workbench.getInstance().error("No sequences to perform the hmmer search. Please add a genome/metagenome file to this project!");
+			}
+			else{
+				this.hmmer_loader = new SearchAndLoadHomologueSequences(sequences, project, project.isNCBIGenome(),Source.hmmer);
+				this.hmmer_loader.setTimeLeftProgress(this.progress);
+			}
 
 			if(!project.isNCBIGenome()) {
 

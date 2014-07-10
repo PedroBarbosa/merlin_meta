@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+//import java.util.LinkedList;
 import java.util.List;
 
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
@@ -68,7 +68,7 @@ public class TransportersContainer extends Entity implements Serializable {
 
 			rs = stmt.executeQuery("SELECT compound_idcompound, stoichiometric_coefficient FROM stoichiometry");
 
-			LinkedList<String> reagents = new LinkedList<String>();
+//			LinkedList<String> reagents = new LinkedList<String>();
 
 			while(rs.next()) {
 				

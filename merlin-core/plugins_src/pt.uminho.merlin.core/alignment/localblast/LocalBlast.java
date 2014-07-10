@@ -32,7 +32,6 @@ import es.uvigo.ei.aibench.workbench.Workbench;
  */
 public class LocalBlast {
 	private AtomicBoolean cancel;
-	private TimeLeftProgress progress;
 	private Process process;
 	private long startTime;
 	private Project project;
@@ -134,74 +133,82 @@ public class LocalBlast {
 		boolean parseStarted = false;
 		boolean firstline = true;
 
+		try{
+			if(parser.openFile()){			
 
-		if(parser.openFile()){			
-
-			String linhaQuery = "Query=";
-			while (parser.nextLine()){
-				String linha = parser.getLine();
-
-
-				if(firstline){
-
-					String [] aux = linha.split(" ");
-					String version = aux[1];
-					firstline = false;
-					this.setupInfo[0] = "ncbi-"+this.program;
-					this.setupInfo[1] = version;
-				}
+				String linhaQuery = "Query=";
+				while (parser.nextLine()){
+					String linha = parser.getLine();
 
 
-				String homologueID = "";
-				String score, evalue ;
+					if(firstline){
 
-				if(linha.startsWith("Database")){
-					String databaseID  = linha.substring(9).replaceAll(" ", "");
-					parser.nextLine();
-					databaseID += parser.getLine();
-					this.setupInfo[2] = databaseID;
-				}
+						String [] aux = linha.split(" ");
+						String version = aux[1];
+						firstline = false;
+						this.setupInfo[0] = "ncbi-"+this.program;
+						this.setupInfo[1] = version;
+					}
 
-				if(linha.startsWith(linhaQuery)){
 
-					parseStarted = true;
-					java.util.regex.Matcher matcher = Pattern.compile("(?<==).*").matcher(linha);
+					String homologueID = "";
+					String score, evalue ;
+
+					if(linha.startsWith("Database")){
+						String databaseID  = linha.substring(9).replaceAll(" ", "");
+						parser.nextLine();
+						databaseID += parser.getLine();
+						this.setupInfo[2] = databaseID;
+					}
+
+					if(linha.startsWith(linhaQuery)){
+
+						parseStarted = true;
+						java.util.regex.Matcher matcher = Pattern.compile("(?<==).*").matcher(linha);
+						matcher.find();
+						query = matcher.group().replaceAll("\\s", "");
+
+						homologues = new LinkedHashMap<String, String[]>();
+
+					}
+
+
+					if (linha.contains("No hits found")) {
+						this.noSimilaritiesGenes.add(query);
+					}
+
+					java.util.regex.Matcher matcher = Pattern.compile("^\\s+\\w+\\|(\\w+)\\|.+\\s(\\S+)\\s+(\\S+).*").matcher(linha);
 					matcher.find();
-					query = matcher.group().replaceAll("\\s", "");
 
-					homologues = new LinkedHashMap<String, String[]>();
 
+					if (matcher.matches()) {
+
+
+						homologueID = matcher.group(1);
+						score = matcher.group(2);
+						evalue = matcher.group(3);
+						String[] par = new String[9];
+						par[0] = score;
+						par[1] = evalue;
+						homologues.put(homologueID, par);
+
+					}
+
+
+					if(linha.isEmpty() && parseStarted && !homologues.isEmpty()){
+
+						blastParse.put(query, homologues);
+					}			
 				}
-
-
-				if (linha.contains("No hits found")) {
-					this.noSimilaritiesGenes.add(query);
-				}
-
-				java.util.regex.Matcher matcher = Pattern.compile("^\\s+\\w+\\|(\\w+)\\|.+\\s(\\S+)\\s+(\\S+).*").matcher(linha);
-				matcher.find();
-
-
-				if (matcher.matches()) {
-
-
-					homologueID = matcher.group(1);
-					score = matcher.group(2);
-					evalue = matcher.group(3);
-					String[] par = new String[9];
-					par[0] = score;
-					par[1] = evalue;
-					homologues.put(homologueID, par);
-
-				}
-
-
-				if(linha.isEmpty() && parseStarted && !homologues.isEmpty()){
-
-					blastParse.put(query, homologues);
-				}			
 			}
 		}
+		
+		catch (IOException e) {
+				Workbench.getInstance().error("Problems ocurred during local blast !!");
+				e.printStackTrace();
+				//System.exit(-1);
+			}
+		
 
 
 		if(blastParse.isEmpty()){
@@ -579,20 +586,7 @@ public class LocalBlast {
 		}
 	}
 
-	/**
-	 * @return the progress
-	 */
-	public TimeLeftProgress getProgress() {
-		return progress;
-	}
-
-	/**
-	 * @param progress the progress to set
-	 */
-	public void setProgress(TimeLeftProgress progress) {
-		this.progress = progress;
-	}
-
+	
 	/**
 	 * @return the cancel
 	 */
@@ -606,7 +600,6 @@ public class LocalBlast {
 	public void setCancel() {
 
 		this.cancel.set(true);
-
 		this.process.destroy();
 		setCancel(this.cancel);		
 	}

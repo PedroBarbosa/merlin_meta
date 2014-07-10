@@ -55,7 +55,7 @@ public class Create_Database_Backup {
 				else{
 					this.backup = backupdb;
 					this.commandline += "mysqldump -n -u " + this.username+ " -p" + this.password + " " + this.database + " -r " + this.backup;
-					System.out.println(this.commandline);
+					//System.out.println(this.commandline);
 
 
 					Process runtimeProcess = Runtime.getRuntime().exec(this.commandline);

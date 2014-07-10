@@ -146,7 +146,12 @@ public class EbiBlastSimilaritySearch {
 				extension = ".fna";
 			}
 			Map<String, ProteinSequence> sequences = CreateGenomeFile.getGenomeFromID(project.getGenomeCodeName(), extension);
-			this.ebiBlastLoader = new SearchAndLoadHomologueSequences(sequences, project, project.isNCBIGenome(), Source.ebi);
+			if(sequences == null){
+				Workbench.getInstance().error("No sequences to BLAST. Please add a genome/metagenome file to this project!");
+			}
+			else{
+				this.ebiBlastLoader = new SearchAndLoadHomologueSequences(sequences, project, project.isNCBIGenome(), Source.ebi);
+			}
 			
 			//it has to be milliseconds
 			this.ebiBlastLoader.setLatencyWaitingPeriod(this.latencyWaitingPeriod*60000);

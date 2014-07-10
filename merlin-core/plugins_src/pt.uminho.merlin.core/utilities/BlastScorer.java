@@ -85,7 +85,9 @@ public class BlastScorer {
 	public Double getS() {
 		
 		if(this.getS1()>0) {
-			
+			System.out.println("taxaver" + taxonomyAverage());
+			double b = this.getAlpha() + this.getS1();
+			System.out.println(b);
 			this.setS(this.getAlpha() * this.getS1() +(1-this.getAlpha())*taxonomyAverage());	
 		}
 		else {
@@ -141,8 +143,11 @@ public class BlastScorer {
 		//r=(r/this.getMaxRank())/(numberOfOrganisms*(1-(numberOfOrganisms-ranks.size())*penaltyCost));
 		
 		//r=(r*(1-(numberOfOrganisms-ranks.size())*this.beta)/(numberOfOrganisms*this.getMaxRank()));
-		
-		r=(r*(1-(this.minimumNumberofHits - taxScore.size()) * this.beta)/(taxScore.size()*this.getMaxTaxonomy()));
+		System.out.println("R" + r);
+		System.out.println(this.minimumNumberofHits);
+		System.out.println(taxScore.size());
+		System.out.println();
+		//r=(r*(1-(this.minimumNumberofHits - taxScore.size()) * this.beta)/(taxScore.size()*this.getMaxTaxonomy()));
 		
 		return r;
 	}

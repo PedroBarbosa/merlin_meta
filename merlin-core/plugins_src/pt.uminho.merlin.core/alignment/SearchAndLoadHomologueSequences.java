@@ -706,7 +706,7 @@ public class SearchAndLoadHomologueSequences {
 						eVal = 10;
 					}
 				}
-
+			
 				for(String key:this.sequenceFile.keySet()) {
 
 					int seqSize = this.sequenceFile.get(key).getLength()/unitLength;

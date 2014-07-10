@@ -785,7 +785,8 @@ public class TaxonomyMetaContainer extends Entity {
 						if(orderedDomainHash.get(domain) == count){
 							aux = new String[2];
 							aux[0] = "\t"+domain;
-							aux[1] = Double.toString((double)count/genes4calculation*100);
+							BigDecimal bd = new BigDecimal((double)count/genes4calculation*100).setScale(4, RoundingMode.HALF_EVEN);
+							aux[1] = Double.toString(bd.doubleValue());
 							res.add(aux);
 						}
 					}
@@ -805,7 +806,9 @@ public class TaxonomyMetaContainer extends Entity {
 
 				aux = new String[2];
 				aux[0] ="\t" + "Viruses";
-				aux[1] =Double.toString((double)viruses/genes4calculation*100);
+				BigDecimal bd = new BigDecimal((double)viruses/genes4calculation*100).setScale(4, RoundingMode.HALF_EVEN);
+				aux[1] = Double.toString(bd.doubleValue());
+				
 				res.add(aux);
 
 				aux = new String[2];
@@ -827,7 +830,8 @@ public class TaxonomyMetaContainer extends Entity {
 
 							aux = new String[2];
 							aux[0] = "\t"+phyla;
-							aux[1] = Double.toString((double)count/genes4calculation*100);
+							bd = new BigDecimal((double)count/genes4calculation*100).setScale(4, RoundingMode.HALF_EVEN);
+							aux[1] = Double.toString(bd.doubleValue());
 							res.add(aux);
 							phylum.remove(phyla);
 							//previousphylum = phyla;
@@ -855,7 +859,8 @@ public class TaxonomyMetaContainer extends Entity {
 
 							aux = new String[2];
 							aux[0] = "\t"+genuss;
-							aux[1] = Double.toString((double)count/genes4calculation*100);
+							bd = new BigDecimal((double)count/genes4calculation*100).setScale(4, RoundingMode.HALF_EVEN);
+							aux[1] = Double.toString(bd.doubleValue());
 							res.add(aux);
 							//previousgenus = genuss;
 							genus.remove(genuss);
@@ -1150,7 +1155,8 @@ public class TaxonomyMetaContainer extends Entity {
 				ArrayList<Double> sortedscoresphyla = new ArrayList<Double>();
 				HashMap<String, Double> sortedHashphyla = new HashMap<>();
 				for (String phyla : phylummap.keySet()){
-					double score = phylummap.get(phyla)/max_score; 
+					BigDecimal bd = new BigDecimal(phylummap.get(phyla)/max_score).setScale(4, RoundingMode.HALF_EVEN);
+					double score = bd.doubleValue();
 					sortedHashphyla.put(phyla, score);
 					sortedscoresphyla.add(score);
 				}
@@ -1178,7 +1184,8 @@ public class TaxonomyMetaContainer extends Entity {
 				ArrayList<Double> sortedscoresgenus = new ArrayList<Double>();
 				HashMap<String, Double> sortedHashgenus = new HashMap<>();
 				for (String genus : genusmap.keySet()){
-					double score = genusmap.get(genus)/max_score; 
+					BigDecimal bd = new BigDecimal(genusmap.get(genus)/max_score).setScale(4, RoundingMode.HALF_EVEN);
+					double score = bd.doubleValue();
 					sortedHashgenus.put(genus, score);
 					sortedscoresgenus.add(score);
 				}
