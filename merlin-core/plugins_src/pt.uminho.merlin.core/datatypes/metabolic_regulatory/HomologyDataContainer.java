@@ -2186,14 +2186,29 @@ public class HomologyDataContainer extends Entity implements Serializable {
 				this.setScore1(s1);
 
 				Map<String, String> s2 = this.getScore2();
-				s2.put(key, format.format(bs.taxonomyAverage()));
-				this.setScore2(s2);
+				if(this.getProject().isMetagenomicProject()){
+					s2.put(key, format.format(0.0));
+					this.setScore2(s2);
+				}
+				else{
+					s2.put(key, format.format(bs.taxonomyAverage()));
+					this.setScore2(s2);
+				}
+			
 
 				Map<String, String> s = this.getScore();
-				s.put(key, format.format(bs.getS()));
-				this.setScore(s);
+				if(this.getProject().isMetagenomicProject()){
+					s.put(key, format.format(bs.getSMeta()));
+					this.setScore(s);
+					ecRank.put(key, bs.getSMeta()+"");
+				}
+				else{
+					s.put(key, format.format(bs.getS()));
+					this.setScore(s);
+					ecRank.put(key, bs.getS()+"");
+				}
+				
 
-				ecRank.put(key, bs.getS()+"");
 			}
 		}
 		catch (Exception e) {e.printStackTrace();}
@@ -2284,15 +2299,28 @@ public class HomologyDataContainer extends Entity implements Serializable {
 
 				Map<String, String> s2 = this.getScoreP2();
 				if(s2==null){s2 = new TreeMap<String, String>();}
-				s2.put(key, format.format(bs.taxonomyAverage()));
-				this.setScoreP2(s2);
-
+				if(this.getProject().isMetagenomicProject()){
+					s2.put(key, format.format(0.0));
+					this.setScore2(s2);
+				}
+				else{
+					s2.put(key, format.format(bs.taxonomyAverage()));
+					this.setScoreP2(s2);
+				}
 				Map<String, String> s = this.getScoreP();
 				if(s==null){s = new TreeMap<String, String>();}
-				s.put(key, format.format(bs.getS()));
-				this.setScoreP(s);
-
-				prodRank.put(key, bs.getS()+"");
+				if(this.getProject().isMetagenomicProject()){
+					s.put(key, format.format(bs.getSMeta()));
+					this.setScoreP(s);
+					prodRank.put(key, bs.getSMeta()+"");
+	
+				}
+				else{
+					s.put(key, format.format(bs.getS()));
+					this.setScoreP(s);
+					prodRank.put(key, bs.getS()+"");
+				}	
+				
 			}
 		}
 		catch (Exception e) {e.printStackTrace();}

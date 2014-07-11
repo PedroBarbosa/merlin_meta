@@ -815,8 +815,8 @@ public class LoadSimilarityResultstoDatabaseLocal {
 				String organism = value[7];
 				String taxonomy = value[8];
 
-				//int taxRank = rankTaxonomy(taxonomy.concat("; "+organism), myOrganismTaxonomy);
-				int taxRank = 1;
+				int taxRank = rankTaxonomy(taxonomy.concat("; "+organism), myOrganismTaxonomy);
+				//int taxRank = 1;
 				Organism org = new Organism(organism,taxonomy, taxRank);
 				this.loadOrganism(org);	
 

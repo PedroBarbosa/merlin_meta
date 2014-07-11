@@ -1,7 +1,6 @@
 package utilities;
 
 import java.util.List;
-
 public class BlastScorer {
 
 
@@ -96,6 +95,22 @@ public class BlastScorer {
 		}
 		return s;
 	}
+	
+	/**
+	 * @return the s in metagenomics projects
+	 */
+	public Double getSMeta() {
+		
+		if(this.getS1()>0) {
+
+			this.setS(this.getAlpha() * this.getS1() +(1-this.getAlpha())*0.0);	
+		}
+		else {
+			
+			this.setS(1.0);
+		}
+		return s;
+	}
 
 	/**
 	 * @param s the s to set
@@ -146,9 +161,9 @@ public class BlastScorer {
 		System.out.println("R" + r);
 		System.out.println(this.minimumNumberofHits);
 		System.out.println(taxScore.size());
-		System.out.println();
-		//r=(r*(1-(this.minimumNumberofHits - taxScore.size()) * this.beta)/(taxScore.size()*this.getMaxTaxonomy()));
 		
+		r=(r*(1-(this.minimumNumberofHits - taxScore.size()) * this.beta)/(taxScore.size()*this.getMaxTaxonomy()));
+		System.out.println(r);
 		return r;
 	}
 

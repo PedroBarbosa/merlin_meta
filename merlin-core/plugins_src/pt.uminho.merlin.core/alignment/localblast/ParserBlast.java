@@ -3,6 +3,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+import es.uvigo.ei.aibench.workbench.Workbench;
+
 
 public class ParserBlast {
 
@@ -30,9 +32,12 @@ public class ParserBlast {
 			System.out.println(this.fileName);
 			this.f = new FileReader(this.fileName);
 			this.reader = new BufferedReader(f);
-		} catch(Exception e)
-		{e.printStackTrace();
-		return false;}
+		} 
+		catch(Exception e){
+			e.printStackTrace();
+			Workbench.getInstance().error("Problems opening the blast output file!");
+			return false;
+			}
 		
 		return true;
 	}

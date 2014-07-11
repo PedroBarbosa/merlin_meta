@@ -164,7 +164,8 @@ public class LocalBlastSimilaritySearch {
 			
 			if(!this.cancel.get()){
 				System.out.println("Local blast is running!");
-				this.localBlast.runBlast();		
+	//			this.localBlast.runBlast();		
+				System.out.println("Parsing blast output.\n");
 				blastparse = this.localBlast.parseBlastOutput();
 				System.out.println("Blast output file parsed.\n");
 				sequencesHash = this.localBlast.saveSequences();
@@ -183,7 +184,7 @@ public class LocalBlastSimilaritySearch {
 			}
 			
 			
-			System.out.println(this.cancel);
+		
 			if(!this.cancel.get()){
 				HomologySetup homologySetup = new HomologySetup(setupInfo[0],setupInfo[1],setupInfo[2],this.blastArgumetns.getEvalue(),
 						this.blastArgumetns.getMatrix(), this.blastArgumetns.getWord_size(),

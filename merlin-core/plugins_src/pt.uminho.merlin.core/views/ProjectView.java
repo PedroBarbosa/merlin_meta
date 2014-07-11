@@ -42,6 +42,7 @@ public class ProjectView extends UpdatablePanel{
 	private Project project;
 	private JLabel jLabel18;
 	private JLabel jLabel19;
+	private JLabel jLabel20;
 	private int counter;
 
 
@@ -88,7 +89,12 @@ public class ProjectView extends UpdatablePanel{
 			jLabel6 = new JLabel();
 			jPanel1.add(jLabel6);
 			jLabel6.setBounds(24, this.increaseCounter(35), 489, 20);
-
+			
+			
+			jLabel20 = new JLabel();
+			jPanel1.add(jLabel20);
+			jLabel20.setBounds(24, this.increaseCounter(35), 489, 20);
+			
 			jLabel7 = new JLabel();
 			jPanel1.add(jLabel7);
 			jLabel7.setBounds(24, this.increaseCounter(35), 489, 20);
@@ -145,6 +151,7 @@ public class ProjectView extends UpdatablePanel{
 			jPanel1.add(jLabel19);
 			jLabel19.setBounds(24, this.increaseCounter(35), 489, 20);
 
+
 			this.fillList();
 
 		} catch (Exception e) {
@@ -173,6 +180,8 @@ public class ProjectView extends UpdatablePanel{
 			if(project.getGenomeCodeName().equals("")) jLabel6.setText("");
 			else jLabel6.setText("Genome Codename: "+project.getGenomeCodeName());
 		}
+		
+		jLabel20.setText("Is Metagenomics project: "+project.isMetagenomicProject());
 
 		jLabel7.setText("Is NCBI genome: "+project.isNCBIGenome());
 
