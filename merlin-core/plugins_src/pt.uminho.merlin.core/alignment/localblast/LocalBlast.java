@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.merlin.utilities.OpenBrowser;
 import pt.uminho.sysbio.merlin.utilities.TimeLeftProgress;
 import pt.uminho.sysbio.common.utilities.io.FileUtils;
@@ -31,6 +33,9 @@ import es.uvigo.ei.aibench.workbench.Workbench;
  *
  */
 public class LocalBlast {
+	
+	private static Logger LOGGER = Logger.getLogger(LocalBlast.class);
+	
 	private AtomicBoolean cancel;
 	private Process process;
 	private long startTime;
@@ -166,8 +171,7 @@ public class LocalBlast {
 						parseStarted = true;
 						java.util.regex.Matcher matcher = Pattern.compile("(?<==).*").matcher(linha);
 						matcher.find();
-						query = matcher.group().replaceAll("\\s", "");
-
+						query = matcher.group().replaceAll("\\s", "");	
 						homologues = new LinkedHashMap<String, String[]>();
 
 					}
@@ -191,12 +195,11 @@ public class LocalBlast {
 						par[0] = score;
 						par[1] = evalue;
 						homologues.put(homologueID, par);
-
 					}
 
 
 					if(linha.isEmpty() && parseStarted && !homologues.isEmpty()){
-
+						
 						blastParse.put(query, homologues);
 					}			
 				}
@@ -458,6 +461,7 @@ public class LocalBlast {
 			}
 		}
 		catch (Exception e) {
+			LOGGER.error(e.getMessage());
 			e.printStackTrace();
 		}
 		return sequencesHash;

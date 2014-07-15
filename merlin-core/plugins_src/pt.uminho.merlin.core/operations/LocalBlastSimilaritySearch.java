@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.axis2.AxisFault;
+import org.apache.log4j.Logger;
 
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import pt.uminho.sysbio.common.utilities.io.FileUtils;
@@ -38,6 +39,9 @@ import es.uvigo.ei.aibench.workbench.Workbench;
 		" and the number of genes to be processed. It also requires that blast is locally installed and one of the below available databases are created. If you are having troubles on setting up" +
 		" one of this prerequisites please go to the documentation in the Merlin folder where detailed user help on these steps is provided.")
 public class LocalBlastSimilaritySearch {
+	
+	private static Logger LOGGER = Logger.getLogger(LocalBlastSimilaritySearch.class);
+	
 	private String program, uniprot_url;
 	private File txt_file, uniprotdb_path;
 	private Project project;
@@ -163,8 +167,8 @@ public class LocalBlastSimilaritySearch {
 
 			
 			if(!this.cancel.get()){
-				System.out.println("Local blast is running!");
-	//			this.localBlast.runBlast();		
+				LOGGER.info("Local blast is running!");
+				this.localBlast.runBlast();		
 				System.out.println("Parsing blast output.\n");
 				blastparse = this.localBlast.parseBlastOutput();
 				System.out.println("Blast output file parsed.\n");
@@ -272,7 +276,7 @@ public class LocalBlastSimilaritySearch {
 			if(uniprotdb_path.exists()){
 				if(uniprotdb_path.getName().endsWith(".phr") || uniprotdb_path.getName().endsWith(".pin") || uniprotdb_path.getName().endsWith(".psq")){
 					String s = uniprotdb_path.getAbsoluteFile().toString();
-					this.databaseDirectory = s.substring(0, s.indexOf('.'));
+					this.databaseDirectory = s.substring(0, s.lastIndexOf('.'));
 					System.out.println(this.databaseDirectory);
 				}
 				else{

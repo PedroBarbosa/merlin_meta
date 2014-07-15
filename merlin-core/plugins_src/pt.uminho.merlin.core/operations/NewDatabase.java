@@ -42,7 +42,6 @@ public class NewDatabase {
 		MySQL_Schemas schemas = new MySQL_Schemas( this.username, this.password, this.host,this.port);
 		String[] filePath=new String[6];
 		String path = FileUtils.getCurrentLibDirectory()+"/../utilities/";
-
 		filePath[0]=path +"sysbio_KEGG.sql";
 		filePath[1]=path +"sysbio_blast.sql";
 		filePath[2]=path +"sysbio_metabolites_transporters.sql";

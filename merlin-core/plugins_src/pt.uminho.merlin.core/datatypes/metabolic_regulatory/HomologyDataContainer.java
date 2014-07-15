@@ -1554,7 +1554,6 @@ public class HomologyDataContainer extends Entity implements Serializable {
 	 * @return
 	 */
 	public String getECPercentage(String selectedItem, int row) {
-
 		for(int i = 0; i < this.enzyme[Integer.parseInt(keys.get(row))].length; i++) {
 
 			if(this.enzyme[Integer.parseInt(keys.get(row))][i].equals(selectedItem)) {
@@ -2558,7 +2557,6 @@ public class HomologyDataContainer extends Entity implements Serializable {
 		//double total = 0;
 		String[][] ecn = new String[2][0];
 		Pair<String,Double> ecnumber[] = null;
-
 		this.enzyme[Integer.parseInt(keys.get(index))]= new String[0];
 		this.ecnPercent[Integer.parseInt(keys.get(index))] = new String[0];
 

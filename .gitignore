@@ -5,3 +5,4 @@
 /RemoteSystemsTempFiles
 /merlin-core/temp/*
 /merlin-core/jre7
+/merlin-core/.settings/*

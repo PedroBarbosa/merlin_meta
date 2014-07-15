@@ -111,7 +111,6 @@ public class LoadSimilarityResultstoDatabaseLocal {
 			}
 
 			else{
-				System.out.println("TAX" + organism.getTaxRank());
 				this.statement.execute("INSERT INTO organism (organism, taxonomy, taxrank) VALUES ('"
 						+ MySQL_Utilities.mysqlStrConverter(organism.getOrganism()) +"','"+
 						MySQL_Utilities.mysqlStrConverter(organism.getTaxonomy()) +"','"+organism.getTaxRank()+"');");
@@ -675,9 +674,8 @@ public class LoadSimilarityResultstoDatabaseLocal {
 					concatEC += ", " + s;
 			}
 			//for(String ecnumber_concat : ecn.keySet()) {
-
 			this.statement.execute("INSERT INTO ecNumberRank (geneHomology_s_key, ecNumber, rank) " +
-					"VALUES("+ this.geneHomology_s_key +",'"+ MySQL_Utilities.mysqlStrConverter(concatEC) + "','" +ecn.get(concatEC)+ "');");
+					"VALUES("+ this.geneHomology_s_key +",'"+ MySQL_Utilities.mysqlStrConverter(concatEC) + "','" +ecn.get(ecnumber)+ "');");
 
 			ResultSet rs = this.statement.executeQuery("SELECT LAST_INSERT_ID()");
 			rs.next();
