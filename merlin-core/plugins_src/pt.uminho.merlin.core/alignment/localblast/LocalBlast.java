@@ -77,7 +77,7 @@ public class LocalBlast {
 			String s = null ;
 
 			this.commandline += " -query " + this.queryPath + " -db " + this.dBPATH  + " -out " + this.outputFile + this.args;
-			System.out.println(this.commandline);
+			LOGGER.debug("Blast command: " + this.commandline);
 			
 			long startTime = System.currentTimeMillis();
 			this.process = Runtime.getRuntime().exec(this.commandline);

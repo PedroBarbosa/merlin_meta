@@ -21,6 +21,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import operations.Merge_databases;
+
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import datatypes.DataTable;
 import datatypes.GenericDataTable;
@@ -37,6 +41,7 @@ public class TaxonomyMetaContainer extends Entity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static Logger LOGGER = Logger.getLogger(TaxonomyMetaContainer.class);
 	private Connection connection;
 	private LinkedHashMap<String, String[]> alltaxonomydata;
 	private int selectedRow;
@@ -132,7 +137,7 @@ public class TaxonomyMetaContainer extends Entity {
 				 * Crucial for the next step to assign taxons to genes
 				 * 
 				 */
-				System.out.println("Building the phylum and genus maps for each gene ... \n");
+				LOGGER.info("Building the phylum and genus maps for each gene ...");
 
 				rs = stmt.executeQuery(
 						"SELECT locusTag,locusID, bits, eValue,taxonomy FROM geneHomology " + 
@@ -347,7 +352,7 @@ public class TaxonomyMetaContainer extends Entity {
 
 				}
 
-				System.out.println("Selecting the phylum and genus for each gene...\n");
+				LOGGER.info("Selecting the phylum and genus for each gene...");
 				/*
 				 * 
 				 * Select the phylum and genus for each gene and give a score for that selection

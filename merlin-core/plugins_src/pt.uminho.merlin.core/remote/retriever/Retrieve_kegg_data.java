@@ -10,7 +10,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.common.bioapis.externalAPI.kegg.KeggAPI;
+import remote.GetAndLoadKeggData;
 import remote.retriever.KEGG_data_retriever.Entity_Type;
 import remote.retriever.entry_types.Enzyme_entry;
 import remote.retriever.entry_types.Gene_entry;
@@ -24,7 +27,8 @@ import remote.retriever.entry_types.Reaction_entry;
  *
  */
 public class Retrieve_kegg_data {
-
+	
+	private static Logger LOGGER = Logger.getLogger(Retrieve_kegg_data.class);
 	private ConcurrentLinkedQueue<Metabolite_entry> resultMetabolites;
 	private ConcurrentLinkedQueue<Enzyme_entry> resultEnzymes;
 	private ConcurrentLinkedQueue<Reaction_entry> resultReactions;
@@ -56,7 +60,7 @@ public class Retrieve_kegg_data {
 		
 		if (organismID.isEmpty() || organismID.equalsIgnoreCase("no_org")) {
 		
-			System.out.println(organismID);
+			LOGGER.debug(organismID);
 		}
 		else {			
 			
@@ -82,7 +86,7 @@ public class Retrieve_kegg_data {
 			this.setCompoundsWithBiologicalRoles(KEGG_data_retriever.getCompoundsWithBiologicalRoles());
 			long endTime_process_cbr = System.currentTimeMillis();
 
-			System.out.println("Total elapsed time in execution of method setCompoundsWithBiologicalRoles is :"+ String.format("%d min, %d sec", 
+			LOGGER.debug("Total elapsed time in execution of method setCompoundsWithBiologicalRoles is :"+ String.format("%d min, %d sec", 
 					TimeUnit.MILLISECONDS.toMinutes(endTime_process_cbr-startTime_cbr),TimeUnit.MILLISECONDS.toSeconds(endTime_process_cbr-startTime_cbr) -TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime_process_cbr-startTime_cbr))));
 		}
 		//Concurrent Data structures 
@@ -162,12 +166,12 @@ public class Retrieve_kegg_data {
 
 			long endTime_process = System.currentTimeMillis();
 
-			System.out.println("Total elapsed time in execution of method "+entity_Type_String+" is :"+ String.format("%d min, %d sec", 
+			LOGGER.debug("Total elapsed time in execution of method "+entity_Type_String+" is :"+ String.format("%d min, %d sec", 
 					TimeUnit.MILLISECONDS.toMinutes(endTime_process-startTime_process),TimeUnit.MILLISECONDS.toSeconds(endTime_process-startTime_process) -TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime_process-startTime_process))));
 		}
 		long endTime = System.currentTimeMillis();
 
-		System.out.println("Total elapsed time in execution of method GLOBAL is :"+ String.format("%d min, %d sec", 
+		LOGGER.debug("Total elapsed time in execution of method GLOBAL is :"+ String.format("%d min, %d sec", 
 				TimeUnit.MILLISECONDS.toMinutes(endTime-startTime),TimeUnit.MILLISECONDS.toSeconds(endTime-startTime) -TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime-startTime))));
 
 		//from maps to lists

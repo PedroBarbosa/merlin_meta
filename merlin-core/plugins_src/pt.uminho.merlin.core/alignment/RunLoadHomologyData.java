@@ -7,6 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
+import operations.LocalBlastSimilaritySearch;
+
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.merge.databases.containers.FastaSequence;
 import pt.uminho.sysbio.merge.databases.containers.GeneHomology;
 import pt.uminho.sysbio.common.database.connector.datatypes.MySQLMultiThread;
@@ -16,7 +20,8 @@ import pt.uminho.sysbio.common.database.connector.datatypes.MySQLMultiThread;
  *
  */
 public class RunLoadHomologyData implements Runnable {
-
+	
+	private static Logger LOGGER = Logger.getLogger(RunLoadHomologyData.class);
 	private MySQLMultiThread msqlmt;
 	private ConcurrentLinkedQueue<GeneHomology> geneHomologyList;
 	private LoadedData loadedData;
@@ -94,11 +99,14 @@ public class RunLoadHomologyData implements Runnable {
 						geneList.loadDataFromMerge(geneHomology);
 
 						long endTime = System.currentTimeMillis();
-						System.out.println("Total elapsed time in execution of "+geneHomology.getLocusTag()+" is :"+ String.format("%d min, %d sec", 
+						LOGGER.debug("Total elapsed time in execution of "+geneHomology.getLocusTag()+" is :"+ String.format("%d min, %d sec", 
 								TimeUnit.MILLISECONDS.toMinutes(endTime-startTime),TimeUnit.MILLISECONDS.toSeconds(endTime-startTime) 
 								-TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime-startTime))));
 
-						System.out.println("Countdown:\t"+geneHomologyList.size() + "\t\tGenes map:\t"+ loadedData.getGenesMap().size());
+						LOGGER.debug("Countdown:\t"+ geneHomologyList.size() + "\t\tGenes map:\t"+ loadedData.getGenesMap().size());
+					}
+					else{
+						LOGGER.debug("Gene " +geneHomology.getLocusTag()+ " is already in the database.");
 					}
 
 				}
@@ -126,6 +134,9 @@ public class RunLoadHomologyData implements Runnable {
 
 						System.out.println("Countdown genes with similarities:\t"+geneBlastLocalList.size() + "\t\tGenes map:\t"+ loadedData.getGenesMap().size());
 					}
+					else{
+						LOGGER.debug("Gene " +geneid + " is already in the database.");
+					}
 
 				}
 
@@ -149,13 +160,15 @@ public class RunLoadHomologyData implements Runnable {
 							geneList.loadNosimilaritiesGenesFromLocalBlast(geneid, sequence);
 
 							long endTime = System.currentTimeMillis();
-							System.out.println("Total elapsed time in execution of "+geneid+" is\t:"+ String.format("%d min, %d sec", 
+							LOGGER.debug("Total elapsed time in execution of "+geneid+" is\t:"+ String.format("%d min, %d sec", 
 									TimeUnit.MILLISECONDS.toMinutes(endTime-startTime),TimeUnit.MILLISECONDS.toSeconds(endTime-startTime) 
 									-TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime-startTime))));
 
-							System.out.println("Countdown genes without similarities:\t"+geneBlastLocalList.size() + "\t\tGenes map:\t"+ loadedData.getGenesMap().size());
+							LOGGER.debug("Countdown genes without similarities:\t"+geneBlastLocalList.size() + "\t\tGenes map:\t"+ loadedData.getGenesMap().size());
 						}
-
+						else{
+							LOGGER.debug("Gene " +geneid + " is already in the database.");
+						}
 					}
 				}
 			}

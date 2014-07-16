@@ -5,6 +5,8 @@ package operations;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.merge.databases.readFromDatabase.RetrieveHomologyData;
 import pt.uminho.sysbio.merge.databases.containers.HomologySetup;
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
@@ -25,7 +27,7 @@ public class Merge_databases {
 
 		private Project host_project;
 		private Project target_project;
-		
+		private static Logger LOGGER = Logger.getLogger(Merge_databases.class);
 		
 		@Port(direction=Direction.INPUT,validateMethod ="validateHostProject", name="Host Project", description= "Select the project that will be populated ", order=1)
 		public void selectedHostProject(Project project){
@@ -39,7 +41,7 @@ public class Merge_databases {
 		try{
 			
 			
-			Workbench.getInstance().info("This operation may take several hours, depending on the database size");
+			Workbench.getInstance().info("This operation may take several hours, depending on the database size.");
 			
 			Connection c1 = (Connection) new Connection(this.host_project.getDatabase().getMySqlCredentials().get_database_host(), 
 					this.host_project.getDatabase().getMySqlCredentials().get_database_port(),this.host_project.getDatabase().getMySqlCredentials().get_database_name(), 
@@ -54,12 +56,12 @@ public class Merge_databases {
 			r.retrieveAllData();
 	
 			List<HomologySetup> homologySetupList = r.getHomologySetupFromDatabase();
-			System.out.println(homologySetupList);
-	
+			LOGGER.debug(homologySetupList);
+			LOGGER.info("Homology data retrieved.");
 			ProcessHomologySetup p = new ProcessHomologySetup(c1);
 	
 			p.loadHomologySetup(homologySetupList);	
-			Workbench.getInstance().info("Merging database process completed");
+			Workbench.getInstance().info("Merging database process completed.");
 		}
 		catch (Exception e) {
 			Workbench.getInstance().error("Errors occurred while performing the operation " + e);
@@ -78,7 +80,7 @@ public class Merge_databases {
 
 			if(project == null){
 
-				throw new IllegalArgumentException("No Project Selected in the Host Project field");
+				throw new IllegalArgumentException("No Project Selected in the Host Project field.");
 			}
 			else {
 
@@ -90,13 +92,13 @@ public class Merge_databases {
 		public void validateDesiredProject(Project project){
 			
 			if(project == null){
-				throw new IllegalArgumentException("No Project Selected in the Desired Project field");
+				throw new IllegalArgumentException("No Project Selected in the Desired Project field.");
 			}
 			else{
 				
 				if(project.getName().equals(this.host_project.getName())){
 					
-					throw new IllegalArgumentException("Same project selected. Please select another project in one of the fields");
+					throw new IllegalArgumentException("Same project selected. Please select another project in one of the fields.");
 				}
 				else{
 					this.target_project = project;

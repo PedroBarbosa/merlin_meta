@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import pt.uminho.sysbio.common.database.connector.datatypes.MySQLMultiThread;
 import pt.uminho.sysbio.merlin.utilities.TimeLeftProgress;
@@ -16,13 +18,15 @@ import remote.loader.KEGG_loader;
 import remote.loader.Load_KEGG_Data;
 import remote.retriever.Retrieve_kegg_data;
 import datatypes.Project;
+import datatypes.metagenomics.TaxonomyMetaContainer;
 
 /**
  * @author ODias
  *
  */
 public class GetAndLoadKeggData {
-
+	
+	private static Logger LOGGER = Logger.getLogger(GetAndLoadKeggData.class);
 	private MySQLMultiThread msqlmt;
 	private String organismID;
 	private List<Runnable> runnables;
@@ -124,13 +128,13 @@ public class GetAndLoadKeggData {
 
 			long endTime = System.currentTimeMillis();
 
-			System.out.println("Total elapsed time in execution of method Load_kegg is :"+ String.format("%d min, %d sec", 
+			LOGGER.debug("Total elapsed time in execution of method Load_kegg is :"+ String.format("%d min, %d sec", 
 					TimeUnit.MILLISECONDS.toMinutes(endTime2-startTime),TimeUnit.MILLISECONDS.toSeconds(endTime2-startTime) -TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime2-startTime))));
 
-			System.out.println("Total elapsed time in execution of method build view is :"+ String.format("%d min, %d sec", 
+			LOGGER.debug("Total elapsed time in execution of method build view is :"+ String.format("%d min, %d sec", 
 					TimeUnit.MILLISECONDS.toMinutes(endTime1-startTime1),TimeUnit.MILLISECONDS.toSeconds(endTime1-startTime1) -TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime1-startTime1))));
 
-			System.out.println("Total elapsed time in execution of method TOTAL is :"+ String.format("%d min, %d sec", 
+			LOGGER.debug("Total elapsed time in execution of method TOTAL is :"+ String.format("%d min, %d sec", 
 					TimeUnit.MILLISECONDS.toMinutes(endTime-startTime),TimeUnit.MILLISECONDS.toSeconds(endTime-startTime) -TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime-startTime))));
 
 			if(error) 

@@ -51,7 +51,7 @@ public class LocalBlastSimilaritySearch {
 	private String eVal;
 	private BlastArguments blastArgumetns;
 	private LocalBlast localBlast;
-	private AtomicBoolean cancel = new AtomicBoolean(false);
+
 
 
 	@Port(direction=Direction.INPUT, name="BLAST type", validateMethod="checkProgram",defaultValue="blastp",description="Blast program.",order=1)
@@ -121,16 +121,6 @@ public class LocalBlastSimilaritySearch {
 
 
 	/**
-	 * 
-	 */
-	@Cancel
-	public void cancel() {
-
-		this.localBlast.setCancel();
-
-	}
-
-	/**
 	 * @param project
 	 * @throws SQLException
 	 * @throws AxisFault
@@ -164,32 +154,30 @@ public class LocalBlastSimilaritySearch {
 			ConcurrentLinkedQueue<String> noSimilarities = new ConcurrentLinkedQueue<>();
 			String [] setupInfo = this.localBlast.setupInfo;
 			long startTime = System.currentTimeMillis();
+			Workbench.getInstance().warn("This operation will take some time. Check the 'merlin.log' file to see in which stage the algorithm goes");
 
 			
-			if(!this.cancel.get()){
+		
 				LOGGER.info("Local blast is running!");
 				this.localBlast.runBlast();		
-				System.out.println("Parsing blast output.\n");
+				LOGGER.info("Parsing blast output..");
 				blastparse = this.localBlast.parseBlastOutput();
-				System.out.println("Blast output file parsed.\n");
+				LOGGER.info("Blast output file parsed.");
 				sequencesHash = this.localBlast.saveSequences();
 				noSimilarities = this.localBlast.noSimilaritiesGenes;
 				setupInfo = this.localBlast.setupInfo;
-			}
+			
 			
 
 
-			if(!this.cancel.get()){
-				System.out.println("Number of genes to be processed:\t" + sequencesHash.size());
-				System.out.println("Blast output file parsed.\n" + "Number of genes without similarities:\t" + noSimilarities.size());
-				System.out.println("Retrieving homologues information... This may take a while");
+				LOGGER.info("Number of genes to be processed:\t" + sequencesHash.size());
+				LOGGER.info("Blast output file parsed.\n" + "Number of genes without similarities:\t" + noSimilarities.size());
+				LOGGER.info("Retrieving homologues information... This may take a while");
 				hashfinal = this.localBlast.retrieveUniprotData(blastparse, this.txt_file);
-				System.out.println("\n\nRetrieve of the Uniprot data finished!!");
-			}
-			
-			
-		
-			if(!this.cancel.get()){
+				LOGGER.info("\n\nRetrieve of the Uniprot data finished!!");
+	
+				
+				
 				HomologySetup homologySetup = new HomologySetup(setupInfo[0],setupInfo[1],setupInfo[2],this.blastArgumetns.getEvalue(),
 						this.blastArgumetns.getMatrix(), this.blastArgumetns.getWord_size(),
 						this.blastArgumetns.getGap_costs(), this.blastArgumetns.getNum_descriptions());
@@ -202,22 +190,18 @@ public class LocalBlastSimilaritySearch {
 
 
 				ProcessHomologySetup p = new ProcessHomologySetup(conn);
-				System.out.println("\nLoading now the data into the " + this.project.getDatabase().getMySqlCredentials().get_database_name() + " database...");
+				LOGGER.info("\nLoading now the data into the " + this.project.getDatabase().getMySqlCredentials().get_database_name() + " database...");
 				p.loadLocalBlast(sequencesHash, hashfinal, homologySetup, noSimilarities);
 
-			}
+			
 			
 
 			long endTime = System.currentTimeMillis();
-			System.out.println("Total elapsed time in execution of local blast was: "+ String.format("%d min, %d sec", 
+			LOGGER.info("Total elapsed time in execution of local blast was: "+ String.format("%d min, %d sec", 
 					TimeUnit.MILLISECONDS.toMinutes(endTime-startTime),TimeUnit.MILLISECONDS.toSeconds(endTime-startTime) 
 					-TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime-startTime))));
 			Workbench.getInstance().info("Loading Local Blast data into " +this.project.getDatabase().getMySqlCredentials().get_database_name()+" finished!");
 
-
-			if(this.cancel.get()) {
-				Workbench.getInstance().warn("BLAST process cancelled!");					
-			}
 		}
 		catch (Error e) {e.printStackTrace();}//e.printStackTrace();
 		catch (IOException e) {e.printStackTrace();}//e.printStackTrace();
@@ -277,7 +261,6 @@ public class LocalBlastSimilaritySearch {
 				if(uniprotdb_path.getName().endsWith(".phr") || uniprotdb_path.getName().endsWith(".pin") || uniprotdb_path.getName().endsWith(".psq")){
 					String s = uniprotdb_path.getAbsoluteFile().toString();
 					this.databaseDirectory = s.substring(0, s.lastIndexOf('.'));
-					System.out.println(this.databaseDirectory);
 				}
 				else{
 					throw new IllegalArgumentException("Please select a correct database file ('.phr' or '.pin' or '.psq').");

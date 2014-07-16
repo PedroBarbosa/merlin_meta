@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import pt.uminho.sysbio.common.database.connector.datatypes.MySQLMultiThread;
 import pt.uminho.sysbio.merge.databases.containers.FastaSequence;
@@ -16,14 +18,15 @@ import pt.uminho.sysbio.merge.databases.containers.HomologySetup;
 public class ProcessHomologySetup {
 
 	private MySQLMultiThread mySQLMultiThread;
-
+	private static Logger LOGGER = Logger.getLogger(ProcessHomologySetup.class);
+	
+	
+	
 	public ProcessHomologySetup(MySQLMultiThread mySQLMultiThread){
-
 		this.mySQLMultiThread = mySQLMultiThread;
 	}
 
 	public ProcessHomologySetup(Connection connection){
-
 		this.mySQLMultiThread = connection.getMysqlMutithread();
 	}
 
@@ -48,7 +51,7 @@ public class ProcessHomologySetup {
 
 					numberOfCores=geneHomologyList.size();
 				}
-				System.out.println("number Of threads: "+numberOfCores);
+				LOGGER.debug("number Of threads: "+numberOfCores);
 				List<Thread> threads = new ArrayList<Thread>();
 
 				for(int i=0; i<numberOfCores; i++) {
@@ -57,7 +60,7 @@ public class ProcessHomologySetup {
 
 					Thread thread = new Thread(loadHomologyData);
 					threads.add(thread);
-					System.out.println("Start "+i);
+					LOGGER.debug("Start "+i);
 					thread.start();
 				}
 
@@ -68,7 +71,7 @@ public class ProcessHomologySetup {
 
 			}
 			conn.close();
-			System.out.println("\n LOADIND DATA TO DATABASE PROCESS IS FINISHED.");
+			LOGGER.info("Loading data to internal database finished.");
 		}
 		
 	public void loadLocalBlast (HashMap<String, FastaSequence> sequencesHash, LinkedHashMap<String, LinkedHashMap<String, String[]>> blastlocalHash, HomologySetup homologySetup, ConcurrentLinkedQueue<String> noSimilarities) throws SQLException, InterruptedException{
@@ -98,7 +101,7 @@ public class ProcessHomologySetup {
 
 			numberOfCores=geneBlastLocalList.size();
 		}
-		System.out.println("number Of threads: "+numberOfCores);
+		LOGGER.debug("number Of threads: "+numberOfCores);
 		List<Thread> threads = new ArrayList<Thread>();
 
 		for(int i=0; i<numberOfCores; i++) {
@@ -106,7 +109,7 @@ public class ProcessHomologySetup {
 			Runnable loadHomologyData = new RunLoadHomologyData(sequencesHash,geneBlastLocalList, blastlocalHash, noSimilarities, loadedData, blastlocal_setup_key, mySQLMultiThread);
 			Thread thread = new Thread(loadHomologyData);
 			threads.add(thread);
-			System.out.println("Start "+i);
+			LOGGER.debug("Start "+i);
 			thread.start();
 		}
 
@@ -116,7 +119,7 @@ public class ProcessHomologySetup {
 		}
 
 		conn.close();
-		System.out.println("\nLOADIND DATA TO DATABASE PROCESS IS FINISHED.");
+		LOGGER.debug("Loading data to internal database finished.");
 
 	}
 

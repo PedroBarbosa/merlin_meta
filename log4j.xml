@@ -7,10 +7,28 @@
     <layout class="org.apache.log4j.PatternLayout"> 
       <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/> 
     </layout> 
+  </appender>
+
+  <appender name="file" class="org.apache.log4j.RollingFileAppender"> 
+    <param name="file" value="merlin.log"/>
+    <param name="MaxFileSize" value="10000KB"/>
+    <!-- Keep one backup file -->
+    <param name="MaxBackupIndex" value="1"/>
+    <layout class="org.apache.log4j.PatternLayout"> 
+      <param name="ConversionPattern" value="%p %t %c - %m%n"/> 
+    </layout> 
   </appender> 
 
+  <appender name="file2" class="org.apache.log4j.FileAppender"> 
+	<param name="file" value="merlin.log"/>
+	 <param name="immediateFlush" value="true"/> 
+	<param name="threshold" value="debug"/> 
+	<param name="append" value="false"/> <layout class="org.apache.log4j.PatternLayout"> 
+	<param name="conversionPattern" value="%m%n"/> </layout> 
+</appender>
   <root> 
-    <priority value ="none" /> 
+    <priority value ="debug" /> 
+    <appender-ref ref="file2" />
     <appender-ref ref="console" /> 
   </root>
   

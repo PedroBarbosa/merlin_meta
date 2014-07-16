@@ -488,17 +488,17 @@ public class RetrieveHomologyData {
 		return homologySetupList;
 	}
 
-	public static void main (String [] args) throws SQLException{
-
-		Connection c = new Connection("localhost", "3306","HMP", "root", "password");
-		RetrieveHomologyData r = new RetrieveHomologyData(c);
-		r.getOrganismFromDatabase();
-		r.getProductRankFromDatabase();
-		r.getEcNumberRankFromDatabase();
-		r.getHomologuesFromDatabase();
-		r.getFastaSequenceFromDatabase();
-		r.getGeneHomologyFromDatabase();
-		System.out.println(r.getHomologySetupFromDatabase());		
-	}
+//	public static void main (String [] args) throws SQLException{
+//
+//		Connection c = new Connection("localhost", "3306","HMP", "root", "password");
+//		RetrieveHomologyData r = new RetrieveHomologyData(c);
+//		r.getOrganismFromDatabase();
+//		r.getProductRankFromDatabase();
+//		r.getEcNumberRankFromDatabase();
+//		r.getHomologuesFromDatabase();
+//		r.getFastaSequenceFromDatabase();
+//		r.getGeneHomologyFromDatabase();
+//		System.out.println(r.getHomologySetupFromDatabase());		
+//	}
 
 }
