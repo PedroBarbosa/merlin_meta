@@ -131,7 +131,7 @@ public class EnzymesMetaView extends javax.swing.JPanel {
 									File file = fc.getSelectedFile();
 									String filePath = file.getAbsolutePath();
 
-									enzymesMetacontainer.exportEnzymesCoverage(new File(filePath+"/"+enzymesMetacontainer.getProject().getName()+"_coverage.txt"));
+									enzymesMetacontainer.exportEnzymesCoverage(new File(filePath+"/"+enzymesMetacontainer.getProject().getName()+"_EnzymesCoverage.txt"));
 									Workbench.getInstance().info("Data successfully exported.");
 								}
 							} catch (Exception e) {

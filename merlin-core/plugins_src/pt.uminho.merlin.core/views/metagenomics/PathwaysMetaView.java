@@ -243,7 +243,7 @@ public class PathwaysMetaView extends javax.swing.JPanel {
 									File file = fc.getSelectedFile();
 									String filePath = file.getAbsolutePath();
 
-									pathwaysMetaContainer.exportPathwayCoverage(new File(filePath+"/"+pathwaysMetaContainer.getProject().getName()+"pathway_coverage.txt"));
+									pathwaysMetaContainer.exportPathwayCoverage(new File(filePath+"/"+pathwaysMetaContainer.getProject().getName()+"PathwaysCoverage.txt"));
 									Workbench.getInstance().info("Data successfully exported.");
 								}
 							} catch (Exception e) {

@@ -156,7 +156,7 @@ public class TaxonomyMetaView extends javax.swing.JPanel {
 									File file = fc.getSelectedFile();
 									String filePath = file.getAbsolutePath();
 
-									taxonomicMetacontainer.exportFinalTaxonomicComposition(new File(filePath+"/"+taxonomicMetacontainer.getProject().getName()+"_composition.txt"));
+									taxonomicMetacontainer.exportFinalTaxonomicComposition(new File(filePath+"/"+taxonomicMetacontainer.getProject().getName()+"_Taxonomic_composition.txt"));
 									Workbench.getInstance().info("Data successfully exported.");
 								}
 							} catch (Exception e) {
