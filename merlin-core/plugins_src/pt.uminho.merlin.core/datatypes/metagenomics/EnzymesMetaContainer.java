@@ -302,11 +302,11 @@ public class EnzymesMetaContainer extends Entity {
 	public String[][] getStats() {
 
 
-		int total_enzymes = 0,oxidoreductases=0,transferases=0,hydrolases=0,lyases=0, isomerases =0, ligases = 0;
-		//int total_inc_enzymes = 0, inc_oxidoreductases=0, inc_transferases= 0, inc_hydrolases =0, inc_lyases = 0, inc_isomerases = 0, inc_ligases = 0;
+		int total_enzymes = 0, total_comp_enzymes = 0, oxidoreductases=0,transferases=0,hydrolases=0,lyases=0, isomerases =0, ligases = 0;
+		int total_inc_enzymes = 0, inc_oxidoreductases=0, inc_transferases= 0, inc_hydrolases =0, inc_lyases = 0, inc_isomerases = 0, inc_ligases = 0;
 		int numb_different_enzymes = 0,enzymesAllgenus = 0, enzymesNoGenus = 0, enzymesSomegenus = 0;
 
-		String[][] res = new String[12][];
+		String[][] res = new String[21][];
 
 		try {
 
@@ -324,15 +324,75 @@ public class EnzymesMetaContainer extends Entity {
 
 
 					total_enzymes+= ecnumber_counts;
+					
+					//###################Enzyme classes #############
+					if(ecNumber.startsWith("1")){
+						if(ecNumber.contains(".-")){
+							inc_oxidoreductases+= ecnumber_counts;
+							total_inc_enzymes += ecnumber_counts;
+						}
+						else{
+							oxidoreductases+= ecnumber_counts;
+							total_comp_enzymes+=ecnumber_counts;
+						}
+				
+					}
+					else if(ecNumber.startsWith("2")){
+						if(ecNumber.contains(".-")){
+							inc_transferases+= ecnumber_counts;
+							total_inc_enzymes += ecnumber_counts;
+						}
+						else{
+							transferases+= ecnumber_counts;
+							total_comp_enzymes+=ecnumber_counts;
+						}
+					}	
+					else if(ecNumber.startsWith("3")){
+						if(ecNumber.contains(".-")){
+							inc_hydrolases+= ecnumber_counts;
+							total_inc_enzymes += ecnumber_counts;
+						}
+						else{
+							hydrolases+= ecnumber_counts;
+							total_comp_enzymes+=ecnumber_counts;
+						}	
+					}
+					
+					else if(ecNumber.startsWith("4")){
+						if(ecNumber.contains(".-")){
+							inc_lyases+= ecnumber_counts;
+							total_inc_enzymes += ecnumber_counts;
+						}
+						else{
+							lyases+= ecnumber_counts;
+							total_comp_enzymes+=ecnumber_counts;
+						}
+					}
+					
+					
+					else if(ecNumber.startsWith("5")){
+						if(ecNumber.contains(".-")){
+							isomerases+= ecnumber_counts;
+							total_inc_enzymes += ecnumber_counts;
+						}
+						else{
+							inc_isomerases+= ecnumber_counts;	
+							total_comp_enzymes+=ecnumber_counts;
+						}
+					}
+					
+					else{
+						if(ecNumber.contains(".-")){
+							ligases+= ecnumber_counts;
+							total_inc_enzymes += ecnumber_counts;
+						}
+						else{
+							inc_ligases+= ecnumber_counts;
+							total_comp_enzymes+=ecnumber_counts;
+						}
+					}
 
-					if(ecNumber.startsWith("1")) oxidoreductases+= ecnumber_counts;
-					else if(ecNumber.startsWith("2")) transferases+= ecnumber_counts;
-					else if(ecNumber.startsWith("3")) hydrolases+= ecnumber_counts;
-					else if(ecNumber.startsWith("4")) lyases+= ecnumber_counts;
-					else if(ecNumber.startsWith("5")) isomerases+= ecnumber_counts;
-					else ligases+= ecnumber_counts;
-
-
+					//###############Genus####################
 					if(nogenus == 0){
 						enzymesAllgenus++;
 					}
@@ -346,44 +406,31 @@ public class EnzymesMetaContainer extends Entity {
 					numb_different_enzymes++;	
 				}
 
-				//				################## Fazer queries a base de dados para saber as enzimas incompletas ##################
-				//				Statement stmt = this.connection.createStatement();
-				//				ResultSet rs = stmt.executeQuery(
-				//						
-				//						);
-				//				
-				//				while (rs.next()){
-				//					total_inc_enzymes+= ecnumber_counts;
-				//
-				//					if(ecNumber.startsWith("1")) inc_oxidoreductases+= ecnumber_counts;
-				//					else if(ecNumber.startsWith("2")) inc_transferases+= ecnumber_counts;
-				//					else if(ecNumber.startsWith("3")) inc_hydrolases+= ecnumber_counts;
-				//					else if(ecNumber.startsWith("4")) inc_lyases+= ecnumber_counts;
-				//					else if(ecNumber.startsWith("5")) inc_isomerases+= ecnumber_counts;
-				//					else inc_ligases+= ecnumber_counts;
-				//
-				//				}
 
-				res[0] = new String[] {"Enzymes present in the annotation of the metagenome (includes all the ocurrences of each enzyme)", ""+total_enzymes};
-				res[1] = new String[] {"      Oxidoreductases(1.-)", ""+oxidoreductases};
-				res[2] = new String[] {"      Transferases(2.-)", ""+transferases};
-				res[3] = new String[] {"      Hydrolases(3.-)", ""+hydrolases};
-				res[4] = new String[] {"	  Lyases(4.-)", ""+lyases};
-				res[5] = new String[] {"      Isomerases(5.-)", ""+isomerases};
-				res[6] = new String[] {"      Ligases(6.-)", ""+ligases};
-				res[7] = new String[] {"", ""};
-				res[8] = new String[] {"Number of different enzymes in the metagenome", ""+numb_different_enzymes};
-				res[9] = new String[] {"Enzymes in which all their encoding genes have a taxonomic genus assignment",""+enzymesAllgenus};
-				res[10] = new String[] {"Enzymes in which at least one of their encoding genes have a taxonomic genus assignment",""+enzymesSomegenus};
-				res[11] = new String[] {"Enzymes in which none of their encoding genes have a taxonomic genus assignment",""+enzymesNoGenus};
-				//				res[11] = new String[] {"", ""};
-				//				res[12] = new String[] {"Number of incomplete enzymes present in the annotation of the metagenome", ""+total_inc_enzymes};
-				//				res[13] = new String[] {"	  Oxidoreductases(1.-)", ""+inc_oxidoreductases};
-				//				res[14] = new String[] {"	  Transferases(2.-)", ""+inc_transferases};
-				//				res[15] = new String[] {"	  Hydrolases(3.-)", ""+inc_hydrolases};
-				//				res[16] = new String[] {"	  Lyases(4.-)", ""+inc_lyases};	
-				//				res[17] = new String[] {"	  Isomerases(5.-)", ""+inc_isomerases};
-				//				res[18] = new String[] {"	  Ligases(6.-)", ""+inc_ligases};
+				res[0] = new String[] {"Enzymes present in the metagenome (includes all the ocurrences of each one)", ""+total_enzymes};
+				res[1] = new String[] {"Complete ECs:", ""+total_comp_enzymes};
+				res[2] = new String[] {"  Oxidoreductases(1.-)", ""+oxidoreductases};
+				res[3] = new String[] {"  Transferases(2.-)", ""+transferases};
+				res[4] = new String[] {"  Hydrolases(3.-)", ""+hydrolases};
+				res[5] = new String[] {"	  Lyases(4.-)", ""+lyases};
+				res[6] = new String[] {"  Isomerases(5.-)", ""+isomerases};
+				res[7] = new String[] {"  Ligases(6.-)", ""+ligases};
+				res[8] = new String[] {"", ""};
+				res[9] = new String[] {"Incomplete ECs:", ""+total_inc_enzymes};
+				res[10] = new String[] {"  Oxidoreductases(1.-)", ""+inc_oxidoreductases};
+				res[11] = new String[] {"  Transferases(2.-)", ""+inc_transferases};
+				res[12] = new String[] {"  Hydrolases(3.-)", ""+inc_hydrolases};
+				res[13] = new String[] {"	  Lyases(4.-)", ""+inc_lyases};	
+				res[14] = new String[] {"  Isomerases(5.-)", ""+inc_isomerases};
+				res[15] = new String[] {"  Ligases(6.-)", ""+inc_ligases};
+				res[16] = new String[] {"", ""};
+				res[17] = new String[] {"Number of different enzymes in the metagenome", ""+numb_different_enzymes};
+				res[18] = new String[] {"Enzymes in which all their encoding genes have a taxonomic genus assignment",""+enzymesAllgenus};
+				res[19] = new String[] {"Enzymes in which at least one of their encoding genes have a taxonomic genus assignment",""+enzymesSomegenus};
+				res[20] = new String[] {"Enzymes in which none of their encoding genes have a taxonomic genus assignment",""+enzymesNoGenus};
+				
+				
+
 
 
 

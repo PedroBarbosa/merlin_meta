@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import datatypes.DataTable;
 import datatypes.GenericDataTable;
@@ -34,6 +36,7 @@ public class PathwaysMetaContainer extends Entity {
 	/**
 	 * 
 	 */
+	private static Logger LOGGER = Logger.getLogger(PathwaysMetaContainer.class);
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
 	private HashMap<String, String[]> allpathwaydata;
@@ -220,8 +223,8 @@ public class PathwaysMetaContainer extends Entity {
 			 * 
 			 * ########################## HYPERGEOMETRIC PROBABILITY FOR PATHWAY PRESENCE #############################
 			 */
-			System.out.println("Samp size " + this.sampleSize);
-			System.out.println("Pop size " + this.populationSize);
+			LOGGER.debug("Samp size " + this.sampleSize);
+			LOGGER.debug("Pop size " + this.populationSize);
 			double overall_ratio = (double) this.sampleSize/this.populationSize;
 			boolean isPositivelySignificant = false;
 			for (String pathway : hypergeometricAux.keySet()){

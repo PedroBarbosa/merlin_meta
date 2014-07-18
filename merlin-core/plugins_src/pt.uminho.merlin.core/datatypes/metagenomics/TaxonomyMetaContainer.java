@@ -21,10 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
-import operations.Merge_databases;
+
 
 import org.apache.log4j.Logger;
-
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import datatypes.DataTable;
 import datatypes.GenericDataTable;

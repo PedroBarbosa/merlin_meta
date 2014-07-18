@@ -14,11 +14,14 @@ import java.util.TreeSet;
 
 import javax.swing.ImageIcon;
 
+import org.apache.log4j.Logger;
+
 import pt.uminho.sysbio.common.bioapis.externalAPI.uniprot.UniProtAPI;
 import pt.uminho.sysbio.common.database.connector.datatypes.Connection;
 import uk.ac.ebi.kraken.interfaces.uniprot.UniProtEntry;
 import utilities.IntegrationReport;
 import datatypes.metabolic_regulatory.HomologyDataContainer;
+import datatypes.metagenomics.PathwaysMetaContainer;
 import es.uvigo.ei.aibench.workbench.Workbench;
 import gui.IntegrationConflictsGUI;
 
@@ -29,7 +32,8 @@ import gui.IntegrationConflictsGUI;
  *
  */
 public class IntegrateHomologyData implements IntegrateData {
-
+	
+	private static Logger LOGGER = Logger.getLogger(IntegrateHomologyData.class);
 	private Map<String, String> homologyProduct;
 	private Map<String, String> homologyName;
 	private Map<String, Set<String>> homologyEnzymes;
@@ -101,7 +105,7 @@ public class IntegrateHomologyData implements IntegrateData {
 		this.isEukaryote = homologyDataContainer.isEukaryote();
 
 		for(Integer key : homologyDataContainer.getIntegrationLocusList().keySet()) {
-
+			
 			if(homologyDataContainer.getIntegrationSelectedGene().containsKey(key) && homologyDataContainer.getIntegrationSelectedGene().get(key)) {
 
 				this.homologyLocusTags.add(homologyDataContainer.getIntegrationLocusList().get(key));
@@ -151,7 +155,7 @@ public class IntegrateHomologyData implements IntegrateData {
 		Set<String> enzymes  = new TreeSet<String>();
 
 		try {
-
+			
 			Statement stmt = this.connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT gene.name, locusTag, chromosome.name FROM gene "+
 					"INNER JOIN chromosome ON (idchromosome=chromosome_idchromosome) " +
@@ -658,7 +662,8 @@ public class IntegrateHomologyData implements IntegrateData {
 	 * Loads the local database with the integrated data 
 	 */
 	public void loadLocalDatabase(boolean processProteinNames) {
-
+		
+		Workbench.getInstance().info("This operation might take some minutes depending on the number of genes to process.");
 		if(nameConflictsHomology.size()>0) {
 
 			Workbench.getInstance().warn("There were "+nameConflictsHomology.size()+" unsolved conflicts during the gene names integration!");
@@ -679,7 +684,7 @@ public class IntegrateHomologyData implements IntegrateData {
 		try {
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-			System.out.println("Pre-Processing Genes...");
+			LOGGER.info("Pre-Processing Genes...");
 			///////////////////////////////////////////////////////////////////////////////////////////
 			stmt = this.connection.createStatement();
 
@@ -707,7 +712,7 @@ public class IntegrateHomologyData implements IntegrateData {
 			}
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-			System.out.println("Processing Genes...");
+			LOGGER.info("Processing Genes...");
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 			for(String key :this.homologyLocusTags) {
@@ -744,7 +749,7 @@ public class IntegrateHomologyData implements IntegrateData {
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
-			System.out.println("Processing Gene Names...");
+			LOGGER.info("Processing Gene Names...");
 			///////////////////////////////////////////////////////////////////////////////////////////
 			Set<String> nameKeysList = new TreeSet<String>(this.integratedName_2.keySet());
 
@@ -763,13 +768,13 @@ public class IntegrateHomologyData implements IntegrateData {
 			//{Workbench.getInstance().warn(nameKeysList.size() +" gene names could not be assigned.");}
 
 			///////////////////////////////////////////////////////////////////////////////////////////omar 
-			System.out.println("Processing Enzymes...");
+			LOGGER.info("Processing Enzymes...");
 			///////////////////////////////////////////////////////////////////////////////////////////
 			Set<String> enzymeKeysList = new TreeSet<String>(this.integratedEnzymes.keySet());
 
 			Map<String,String> nameProteinToID = new TreeMap<String, String>();
 			//this.integratedProduct.putAll(this.newProductsConflicts);
-
+			int problematic =0;
 			for(String key :this.integratedEnzymes_clone.keySet()) {
 
 				boolean go = false;
@@ -781,6 +786,7 @@ public class IntegrateHomologyData implements IntegrateData {
 						go = true;
 					}
 				}
+
 
 				if(go) {
 
@@ -832,8 +838,15 @@ public class IntegrateHomologyData implements IntegrateData {
 					}
 
 					for(String enzyme : this.integratedEnzymes_clone.get(key)) {
-
-						if(((enzyme.contains(".-") && this.integratePartial) || (!enzyme.contains(".-") && this.integrateFull)) && !enzyme.isEmpty()) {
+						boolean nullpoint = false;
+						String a = this.integratedProduct_clone.get(key);
+						if(a == null){
+							nullpoint = true;
+							problematic +=1;
+							LOGGER.error("Strange gene\t" + key + "\t|Problematic genes\t" + problematic);
+							
+						}
+						if(((enzyme.contains(".-") && this.integratePartial) || (!enzyme.contains(".-") && this.integrateFull)) && !enzyme.isEmpty() && !nullpoint) {
 
 							rs = stmt.executeQuery("SELECT protein_idprotein FROM enzyme WHERE ecnumber = '"+enzyme+"'");
 							String idProtein;
@@ -890,10 +903,14 @@ public class IntegrateHomologyData implements IntegrateData {
 
 								Set<String> temp= new TreeSet<String>();
 								temp.addAll(nameProteinToID.keySet());
+//								if(key.equals("gene_id_200502") || key.equals("gene_id_114947")){
+//									System.out.println("SERA DESTA");
+//									System.out.println(key);
+//									System.out.println(this.integratedProduct_clone.get(key));
+//								}
+
 								String sTemp = this.integratedProduct_clone.get(key);
-
 								if(!temp.contains(sTemp)) {
-
 									rs = stmt.executeQuery("SELECT idprotein FROM protein WHERE name = '"+sTemp.replace("\'", "\\'")+"'");
 
 									if(!rs.next()) {
@@ -906,6 +923,8 @@ public class IntegrateHomologyData implements IntegrateData {
 									nameProteinToID.put(sTemp, idProtein);
 									rs.close();
 								}
+
+
 
 								idProtein = nameProteinToID.get(sTemp);
 								stmt.execute("INSERT INTO enzyme (protein_idprotein, ecnumber, inModel, source) VALUES("+idProtein+",'"+enzyme+"',true,'HOMOLOGY')");
@@ -954,7 +973,6 @@ public class IntegrateHomologyData implements IntegrateData {
 						}
 
 						if(removeProductIfInsertedInEnzyme) {
-
 							this.integratedProduct_clone.remove(key);
 							removeProductIfInsertedInEnzyme=false;
 						}
@@ -962,11 +980,10 @@ public class IntegrateHomologyData implements IntegrateData {
 					}
 				}
 			}
-
 			if(processProteinNames) {
 
 				///////////////////////////////////////////////////////////////////////////////////////////
-				System.out.println("Processing Protein Names...");
+				LOGGER.info("Processing Protein Names...");
 				///////////////////////////////////////////////////////////////////////////////////////////
 				Set<String> productKeysList = new TreeSet<String>(this.integratedProduct_clone.keySet());
 				ResultSet rs;
@@ -1042,7 +1059,7 @@ public class IntegrateHomologyData implements IntegrateData {
 			}
 
 			///////////////////////////////////////////////////////////////////////////////////////////	
-			Workbench.getInstance().info("Integration Finished...");
+			Workbench.getInstance().info("Integration Finished...Updating now all the views. Finishing..");
 			///////////////////////////////////////////////////////////////////////////////////////////
 			stmt.close();
 		} 

@@ -529,8 +529,8 @@ public class KEGG_loader {
 			if(!this.metabolites_id.containsKey(metabolite.replace("-", ""))) {
 
 				go = false;
-				System.out.println(metabolite);
-				System.out.println(this.metabolites_id);
+				//System.out.println(metabolite);
+				//System.out.println(this.metabolites_id);
 			}
 		}
 
