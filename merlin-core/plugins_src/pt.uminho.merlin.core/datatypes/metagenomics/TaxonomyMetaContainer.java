@@ -57,18 +57,6 @@ public class TaxonomyMetaContainer extends Entity {
 		this.thresholdGenus =  0.3;
 		this.setSelectedRow(-1);
 	}
-	
-
-//		/**
-//		 * 
-//		 * @param conn
-//		 */
-//		public TaxonomyMetaContainer(Connection conn) {
-//			this.connection = conn;
-//			this.min_numberHomologues = 5;
-//			this.thresholdpPhylum = 0.5;
-//			this.thresholdGenus =  0.3;
-//		}
 
 	/**
 	 * @return
