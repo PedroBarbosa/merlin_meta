@@ -117,7 +117,7 @@ SET LAF="-Dswing.defaultlaf=com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"
 SET	LEGACY="-Djava.util.Arrays.useLegacyMergeSort=true"
 SET LOCALE="-Duser.language=en"
 SET CHARSET="-Dfile.encoding=utf-8"
-SET MAXMEM="-Xmx1024M"
+SET MAXMEM="-Xmx4G"
 SET MINMEM="-Xms512m"
 
 SET COMMAND=%JAVA% %LAF% %LEGACY% %LPATH% %LOCALE% %CHARSET% %MAXMEM% %MINMEM% -cp %CLASSPATH% %MAIN_CLASS% %JAR_ARGS%
@@ -236,7 +236,7 @@ LEGACY="-Djava.util.Arrays.useLegacyMergeSort=true"
 LOCALE="-Duser.language=en"
 CHARSET="-Dfile.encoding=utf-8"
 LPATH_UNIX="-Djava.library.path=`pwd`/lib"
-MAXMEM="-Xmx1024M"
+MAXMEM="-Xmx4G"
 MINMEM="-Xms512m"
 
 echo java ${LPATH_UNIX} ${MAXMEM} ${MINMEM} ${LAF} ${LEGACY} ${LOCALE} ${CHARSET} -cp ${CLASSPATH_UNIX} ${MAIN_CLASS} ${JAR_ARGS_UNIX}
@@ -342,6 +342,23 @@ java ${LPATH_UNIX} ${MAXMEM} ${MINMEM} ${LAF} ${LEGACY} ${LOCALE} ${CHARSET} -cp
 								<resources>
 									<resource>
 										<directory>conf</directory>
+										<filtering>false</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resources-root</id>
+							<!-- here the phase you need -->
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/</outputDirectory>
+								<resources>
+									<resource>
+										<directory>root-resources</directory>
 										<filtering>false</filtering>
 									</resource>
 								</resources>

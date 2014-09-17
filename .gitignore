@@ -9,3 +9,4 @@
 /merlin-core/*.log
 /merlin-core/merlin-unix
 *.target/
+*.jar
